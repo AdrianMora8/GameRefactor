@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 0631c42cc0100744a9dffe90808b69de
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - onGameStarted: {fileID: 11400000, guid: 26e15020cf29a80428a4e0c78e98a335, type: 2}
+  - onBirdDied: {fileID: 11400000, guid: 722e2494ff2089448a7f123b315ea59b, type: 2}
+  - onReturnToMenu: {fileID: 11400000, guid: 4561dea2c2aa893449e69652715ad3c0, type: 2}
+  - onScoreChanged: {fileID: 11400000, guid: 2079638e258fd754d810257089009a44, type: 2}
+  - onNewBestScore: {fileID: 11400000, guid: 02322b6955c21f847b1838e7ee7295d2, type: 2}
+  - onPauseToggled: {fileID: 11400000, guid: dd419cb930fcbd54ab2121d19b97f7bb, type: 2}
+  - onShowGameOver: {fileID: 11400000, guid: 317a1a0ca65cf4243be5f34e3821b2da, type: 2}
+  - onBirdFlap: {fileID: 11400000, guid: f60d7359f04af6447946e690048e5cc0, type: 2}
+  - onBirdCollision: {fileID: 11400000, guid: 219bda250ed399f41a73d258fee0b09c, type: 2}
+  - onScoreSound: {fileID: 11400000, guid: b6d126c6f99717147b45f825da6d9ff6, type: 2}
+  - onSettingsChanged: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
