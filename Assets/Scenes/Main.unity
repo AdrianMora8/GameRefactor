@@ -347,6 +347,56 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d098ece1e2e497f44a4d3527c862bc69, type: 3}
+--- !u!1 &853567334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 853567336}
+  - component: {fileID: 853567335}
+  m_Layer: 0
+  m_Name: PipeSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &853567335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853567334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6131f6a31d036c54e8da9929c8baa7e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pipePrefab: {fileID: 371649607013355623, guid: 81ea09aa3d76fbf4c82d6053f438df1f,
+    type: 3}
+  spawnInterval: 2
+  spawnX: 10
+  minY: -2
+  maxY: 2
+  pipeSpeed: 2
+--- !u!4 &853567336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853567334}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7184026, y: 0.45529127, z: -0.6896181}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &932704323 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4665943681780885311, guid: 55f4db550d200424e83e56d3caa4951e,
@@ -430,7 +480,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1165119494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -617,10 +667,14 @@ MonoBehaviour:
   gameConfig: {fileID: 11400000, guid: c57219ae7e96b29469186e4129ccc834, type: 2}
   birdController: {fileID: 1656369138}
   cameraTransform: {fileID: 7077196}
+  pipeSpawner: {fileID: 853567335}
+  backgroundScroller: {fileID: 0}
+  groundScroller: {fileID: 0}
   onGameStarted: {fileID: 11400000, guid: 26e15020cf29a80428a4e0c78e98a335, type: 2}
   onGameOver: {fileID: 11400000, guid: 317a1a0ca65cf4243be5f34e3821b2da, type: 2}
   onPauseToggled: {fileID: 0}
   onScoreChanged: {fileID: 11400000, guid: 2079638e258fd754d810257089009a44, type: 2}
+  showDebugUI: 1
 --- !u!4 &1726015421
 Transform:
   m_ObjectHideFlags: 0

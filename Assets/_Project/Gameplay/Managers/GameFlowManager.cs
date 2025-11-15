@@ -35,6 +35,9 @@ namespace FlappyBird.Gameplay.Managers
         [Header("Game Objects")]
         [SerializeField] private BirdController birdController;
         [SerializeField] private Transform cameraTransform;
+        [SerializeField] private Environment.PipeSpawner pipeSpawner;
+        [SerializeField] private Environment.BackgroundScroller backgroundScroller;
+        [SerializeField] private Environment.GroundScroller groundScroller;
 
         [Header("Events")]
         [SerializeField] private GameEvent onGameStarted;
@@ -236,6 +239,20 @@ namespace FlappyBird.Gameplay.Managers
             // Reset score
             _scoreService.ResetScore();
 
+            // Stop spawning pipes
+            if (pipeSpawner != null)
+            {
+                pipeSpawner.StopSpawning();
+                pipeSpawner.ClearAllPipes();
+            }
+
+            // Start background scrolling (slow)
+            if (backgroundScroller != null)
+                backgroundScroller.StartScrolling();
+            
+            if (groundScroller != null)
+                groundScroller.StartScrolling();
+
             Debug.Log("[GameFlowManager] Menu state ready");
         }
 
@@ -259,6 +276,17 @@ namespace FlappyBird.Gameplay.Managers
 
             // Reset score
             _scoreService.ResetScore();
+
+            // Start spawning pipes
+            if (pipeSpawner != null)
+                pipeSpawner.StartSpawning();
+
+            // Start scrolling
+            if (backgroundScroller != null)
+                backgroundScroller.StartScrolling();
+            
+            if (groundScroller != null)
+                groundScroller.StartScrolling();
 
             // Transition to playing state
             _stateMachine.ChangeState(GameState.Playing);
@@ -308,6 +336,17 @@ namespace FlappyBird.Gameplay.Managers
             {
                 return;
             }
+
+            // Stop spawning pipes
+            if (pipeSpawner != null)
+                pipeSpawner.StopSpawning();
+
+            // Stop scrolling
+            if (backgroundScroller != null)
+                backgroundScroller.StopScrolling();
+            
+            if (groundScroller != null)
+                groundScroller.StopScrolling();
 
             // Save score
             _scoreService.SaveBestScore();
