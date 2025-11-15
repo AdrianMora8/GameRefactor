@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FlappyBird.Gameplay.Bird;
 
 public class PlayAudioOnTriggerEnter : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class PlayAudioOnTriggerEnter : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            if (!collision.gameObject.GetComponent<FlappyBirdController>().IsDead)
+            var birdController = collision.gameObject.GetComponent<BirdController>();
+            if (birdController != null && !birdController.IsDead)
                 source.Play();
         }
     }
