@@ -65,6 +65,15 @@ namespace FlappyBird.Gameplay.Bird
         }
 
         /// <summary>
+        /// Set rotation directly (smooth transition)
+        /// </summary>
+        public void SetRotation(float angle)
+        {
+            Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        /// <summary>
         /// Play flap animation
         /// </summary>
         public void PlayFlapAnimation()

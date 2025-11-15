@@ -24,6 +24,7 @@ namespace FlappyBird.UI.Managers
         [SerializeField] private MainMenuView mainMenuView;
         [SerializeField] private GameplayHUDView gameplayHUDView;
         [SerializeField] private GameOverView gameOverView;
+        [SerializeField] private PauseView pauseView;
 
         [Header("Events")]
         [SerializeField] private IntGameEvent onScoreChanged;
@@ -34,6 +35,7 @@ namespace FlappyBird.UI.Managers
         private MainMenuPresenter _mainMenuPresenter;
         private GameplayHUDPresenter _gameplayHUDPresenter;
         private GameOverPresenter _gameOverPresenter;
+        private PausePresenter _pausePresenter;
 
         // Reference to GameFlowManager
         private Gameplay.Managers.GameFlowManager _gameFlowManager;
@@ -75,6 +77,14 @@ namespace FlappyBird.UI.Managers
                 _gameOverPresenter.OnRestartRequested += HandleRestartRequested;
                 _gameOverPresenter.OnMenuRequested += HandleMenuRequested;
             }
+
+            // Pause Presenter
+            if (pauseView != null)
+            {
+                _pausePresenter = new PausePresenter(pauseView);
+                _pausePresenter.OnResumeRequested += HandleResumeRequested;
+                _pausePresenter.OnMenuRequested += HandleMenuRequested;
+            }
         }
 
         private void SubscribeToEvents()
@@ -100,6 +110,7 @@ namespace FlappyBird.UI.Managers
             _mainMenuPresenter?.Show();
             _gameplayHUDPresenter?.Hide();
             _gameOverPresenter?.Hide();
+            _pausePresenter?.Hide();
         }
 
         /// <summary>
@@ -110,6 +121,7 @@ namespace FlappyBird.UI.Managers
             _mainMenuPresenter?.Hide();
             _gameplayHUDPresenter?.ShowGameplayHUD();
             _gameOverPresenter?.Hide();
+            _pausePresenter?.Hide();
         }
 
         /// <summary>
@@ -120,6 +132,23 @@ namespace FlappyBird.UI.Managers
             _mainMenuPresenter?.Hide();
             _gameplayHUDPresenter?.Hide();
             _gameOverPresenter?.ShowGameOver(currentScore, bestScore, isNewBest);
+            _pausePresenter?.Hide();
+        }
+
+        /// <summary>
+        /// Show pause screen
+        /// </summary>
+        public void ShowPause()
+        {
+            _pausePresenter?.Show();
+        }
+
+        /// <summary>
+        /// Hide pause screen
+        /// </summary>
+        public void HidePause()
+        {
+            _pausePresenter?.Hide();
         }
 
         #endregion
@@ -142,6 +171,12 @@ namespace FlappyBird.UI.Managers
         {
             Debug.Log("[UIManager] Menu requested");
             _gameFlowManager?.ReturnToMenu();
+        }
+
+        private void HandleResumeRequested()
+        {
+            Debug.Log("[UIManager] Resume requested");
+            _gameFlowManager?.ResumeGame();
         }
 
         private void OnGameStarted()
@@ -173,6 +208,7 @@ namespace FlappyBird.UI.Managers
             _mainMenuPresenter?.Dispose();
             _gameplayHUDPresenter?.Dispose();
             _gameOverPresenter?.Dispose();
+            _pausePresenter?.Dispose();
 
             // Unsubscribe from events
             if (onGameStarted != null)

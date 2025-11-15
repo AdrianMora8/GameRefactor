@@ -109,11 +109,35 @@ namespace FlappyBird.Gameplay.Bird
 
         private void Update()
         {
-            // Visual rotation
+            // Visual rotation based on velocity
             if (_view != null && _birdEntity != null && !_birdEntity.IsDead)
             {
-                _view.RotateDownward();
+                UpdateRotation();
             }
+        }
+
+        /// <summary>
+        /// Smooth rotation based on velocity
+        /// </summary>
+        private void UpdateRotation()
+        {
+            if (_rigidbody == null) return;
+
+            float velocity = _rigidbody.velocity.y;
+            float targetRotation;
+
+            if (velocity > 0)
+            {
+                // Going up - rotate upward (max 30 degrees)
+                targetRotation = Mathf.Lerp(0, 30f, Mathf.Clamp01(velocity / birdConfig.jumpForce));
+            }
+            else
+            {
+                // Falling down - rotate downward (max -90 degrees)
+                targetRotation = Mathf.Lerp(0, -90f, Mathf.Clamp01(-velocity / 10f));
+            }
+
+            _view.SetRotation(targetRotation);
         }
 
         private void ConfigurePhysics()
