@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa298469638c95947a0b8822aba8cd9f, type: 3}
+  m_Name: PoolConfig
+  m_EditorClassIdentifier: 
+  pipePrefab: {fileID: 0}
+  pipePoolSize: 25
+  pipeSpawnDistance: 2
+  pipeMinY: -1.34
+  pipeMaxY: 1.03
+  backgroundPrefab: {fileID: 0}
+  backgroundPoolSize: 12
+  backgroundWidth: 4.5
+  backgroundSpawnThreshold: 4
