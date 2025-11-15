@@ -22,6 +22,11 @@ namespace FlappyBird.Configuration
         [Tooltip("How fast the bird moves forward (camera scroll speed)")]
         [Range(0.005f, 0.02f)]
         public float moveSpeed = 0.01f;
+
+        [Header("Physics")]
+        [Tooltip("Gravity scale applied to bird")]
+        [Range(0.5f, 3f)]
+        public float gravityScale = 1f;
         
         [Header("Rotation")]
         [Tooltip("Rotation angle when jumping (in degrees)")]

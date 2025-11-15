@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa298469638c95947a0b8822aba8cd9f, type: 3}
   m_Name: PoolConfig
   m_EditorClassIdentifier: 
-  pipePrefab: {fileID: 0}
+  pipePrefab: {fileID: 1202119918042464, guid: 891b3feccc80f4047ad5ba469ad89244, type: 3}
   pipePoolSize: 25
   pipeSpawnDistance: 2
   pipeMinY: -1.34
   pipeMaxY: 1.03
-  backgroundPrefab: {fileID: 0}
+  backgroundPrefab: {fileID: 1246318765013632, guid: 715d09b28e741204ba06c88934cbbcbf,
+    type: 3}
   backgroundPoolSize: 12
   backgroundWidth: 4.5
   backgroundSpawnThreshold: 4
