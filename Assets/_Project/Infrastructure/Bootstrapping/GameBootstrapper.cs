@@ -5,6 +5,7 @@ using FlappyBird.Infrastructure.Audio;
 using FlappyBird.Infrastructure.Input;
 using FlappyBird.Infrastructure.Save;
 using FlappyBird.Infrastructure.Pooling;
+using FlappyBird.Infrastructure.Services;
 using FlappyBird.Configuration;
 
 namespace FlappyBird.Infrastructure.Bootstrapping
@@ -79,7 +80,10 @@ namespace FlappyBird.Infrastructure.Bootstrapping
             // 3. Save Service
             InitializeSaveService();
 
-            // 4. Pool Service
+            // 4. Player Service
+            InitializePlayerService();
+
+            // 5. Pool Service
             InitializePoolService();
 
             Debug.Log("[GameBootstrapper] All services registered in ServiceLocator");
@@ -133,6 +137,13 @@ namespace FlappyBird.Infrastructure.Bootstrapping
             ISaveService saveService = new SaveService();
             ServiceLocator.Register<ISaveService>(saveService);
             Debug.Log("[GameBootstrapper] ✓ SaveService registered");
+        }
+
+        private void InitializePlayerService()
+        {
+            PlayerService playerService = new PlayerService();
+            ServiceLocator.Register<PlayerService>(playerService);
+            Debug.Log("[GameBootstrapper] ✓ PlayerService registered");
         }
 
         private void InitializePoolService()
