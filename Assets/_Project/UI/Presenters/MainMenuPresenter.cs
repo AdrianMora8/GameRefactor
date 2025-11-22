@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using FlappyBird.UI.Views;
 
 namespace FlappyBird.UI.Presenters
@@ -17,7 +18,6 @@ namespace FlappyBird.UI.Presenters
         private readonly MainMenuView _view;
 
         public event Action OnPlayRequested;
-        public event Action OnSettingsRequested;
         public event Action OnQuitRequested;
 
         public MainMenuPresenter(MainMenuView view)
@@ -29,18 +29,22 @@ namespace FlappyBird.UI.Presenters
             if (playButton != null)
             {
                 playButton.onClick.AddListener(HandlePlay);
+                Debug.Log("[MainMenuPresenter] Play button listener added");
             }
-
-            var settingsButton = _view.GetSettingsButton();
-            if (settingsButton != null)
+            else
             {
-                settingsButton.onClick.AddListener(HandleSettings);
+                Debug.LogWarning("[MainMenuPresenter] Play button is NULL!");
             }
 
             var quitButton = _view.GetQuitButton();
             if (quitButton != null)
             {
                 quitButton.onClick.AddListener(HandleQuit);
+                Debug.Log("[MainMenuPresenter] Quit button listener added");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuPresenter] Quit button is NULL - this is OK");
             }
         }
 
@@ -62,16 +66,13 @@ namespace FlappyBird.UI.Presenters
 
         private void HandlePlay()
         {
+            Debug.Log("<color=green>[MainMenuPresenter] HandlePlay() called!</color>");
             OnPlayRequested?.Invoke();
-        }
-
-        private void HandleSettings()
-        {
-            OnSettingsRequested?.Invoke();
         }
 
         private void HandleQuit()
         {
+            Debug.Log("<color=red>[MainMenuPresenter] HandleQuit() called!</color>");
             OnQuitRequested?.Invoke();
         }
 
@@ -84,12 +85,6 @@ namespace FlappyBird.UI.Presenters
             if (playButton != null)
             {
                 playButton.onClick.RemoveListener(HandlePlay);
-            }
-
-            var settingsButton = _view.GetSettingsButton();
-            if (settingsButton != null)
-            {
-                settingsButton.onClick.RemoveListener(HandleSettings);
             }
 
             var quitButton = _view.GetQuitButton();

@@ -239,7 +239,8 @@ namespace FlappyBird.Gameplay.Bird
         /// </summary>
         public void Die()
         {
-            if (_birdEntity == null || _birdEntity.IsDead) return;
+            if (_birdEntity == null || _birdEntity.IsDead)
+                return;
 
             _birdEntity.Die();
 
@@ -259,8 +260,6 @@ namespace FlappyBird.Gameplay.Bird
 
             // Event
             onBirdDied?.Raise();
-
-            Debug.Log("[BirdController] Bird died!");
         }
 
         /// <summary>
@@ -295,10 +294,25 @@ namespace FlappyBird.Gameplay.Bird
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.CompareTag("Pipe") || collision.gameObject.CompareTag("Ground"))
+            // Si ya está muerto, no procesar más colisiones
+            if (_birdEntity != null && _birdEntity.IsDead)
+                return;
+
+            // Detectar muerte SOLO por colisión SÓLIDA (no triggers)
+            if (collision.gameObject.CompareTag("Pipe"))
             {
                 Die();
             }
+            else if (collision.gameObject.CompareTag("Ground"))
+            {
+                Die();
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            // Los triggers NO causan muerte (ScoreZone usa triggers para puntuación)
+            // Solo las colisiones físicas (OnCollisionEnter2D) pueden matar al bird
         }
 
         #endregion
