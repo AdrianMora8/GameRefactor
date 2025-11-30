@@ -25,10 +25,7 @@ namespace FlappyBird.Gameplay.Environment
             // Find GameFlowManager
             _gameFlowManager = FindObjectOfType<GameFlowManager>();
 
-            if (_gameFlowManager == null)
-            {
-                Debug.LogError("[ScoreZone] GameFlowManager not found!");
-            }
+
 
             // Ensure collider is trigger
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
@@ -45,7 +42,6 @@ namespace FlappyBird.Gameplay.Environment
             {
                 _hasScored = true;
                 _gameFlowManager?.AddScorePoint();
-                Debug.Log("[ScoreZone] Bird passed! Point awarded.");
             }
         }
 

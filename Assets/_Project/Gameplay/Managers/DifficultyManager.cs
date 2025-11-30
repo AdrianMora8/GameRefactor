@@ -37,7 +37,6 @@ namespace FlappyBird.Gameplay.Managers
             // Validate
             if (difficultyConfig == null)
             {
-                Debug.LogError("[DifficultyManager] DifficultyConfig not assigned!");
                 return;
             }
 
@@ -46,7 +45,6 @@ namespace FlappyBird.Gameplay.Managers
                 pipeSpawner = FindObjectOfType<PipeSpawner>();
                 if (pipeSpawner == null)
                 {
-                    Debug.LogError("[DifficultyManager] PipeSpawner not found!");
                     return;
                 }
             }
@@ -55,7 +53,6 @@ namespace FlappyBird.Gameplay.Managers
             if (onScoreChanged != null)
             {
                 onScoreChanged.RegisterListener(OnScoreChanged);
-                Debug.Log("[DifficultyManager] Subscribed to score changes");
             }
 
             // Set initial difficulty
@@ -88,7 +85,6 @@ namespace FlappyBird.Gameplay.Managers
 
             if (_currentLevel == null)
             {
-                Debug.LogWarning("[DifficultyManager] Could not determine difficulty level");
                 return;
             }
 
@@ -99,9 +95,6 @@ namespace FlappyBird.Gameplay.Managers
                 pipeSpawner.SetPipeGap(_currentLevel.PipeGap);
                 pipeSpawner.SetPipeSpeed(_currentLevel.PipeSpeed);
             }
-
-            Debug.Log($"[DifficultyManager] Difficulty set to: {_currentLevel.LevelName} " +
-                      $"(Speed: {_currentLevel.PipeSpeed}, Gap: {_currentLevel.PipeGap}, Rate: {_currentLevel.SpawnRate})");
         }
 
         /// <summary>

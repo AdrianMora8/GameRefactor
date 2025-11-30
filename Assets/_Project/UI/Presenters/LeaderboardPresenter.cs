@@ -34,24 +34,17 @@ namespace FlappyBird.UI.Presenters
             // Get PlayerService
             _playerService = ServiceLocator.Get<PlayerService>();
 
-            if (_playerService == null)
-            {
-                Debug.LogError("[LeaderboardPresenter] PlayerService not found!");
-            }
-
             // Setup button listeners
             var replayButton = _view.GetReplayButton();
             if (replayButton != null)
             {
                 replayButton.onClick.AddListener(HandleReplay);
-                Debug.Log("[LeaderboardPresenter] Replay button listener added");
             }
 
             var exitButton = _view.GetExitButton();
             if (exitButton != null)
             {
                 exitButton.onClick.AddListener(HandleExit);
-                Debug.Log("[LeaderboardPresenter] Exit button listener added");
             }
         }
 
@@ -60,18 +53,11 @@ namespace FlappyBird.UI.Presenters
         /// </summary>
         public void Show(int topN = 10)
         {
-            Debug.Log($"[LeaderboardPresenter] Showing leaderboard (top {topN})");
-
             List<Player> players = new List<Player>();
 
             if (_playerService != null)
             {
                 players = _playerService.GetLeaderboard(topN);
-                Debug.Log($"[LeaderboardPresenter] Retrieved {players.Count} players from service");
-            }
-            else
-            {
-                Debug.LogWarning("[LeaderboardPresenter] PlayerService is null, showing empty leaderboard");
             }
 
             _view.SetTitle("TOP 10");
@@ -88,13 +74,11 @@ namespace FlappyBird.UI.Presenters
 
         private void HandleReplay()
         {
-            Debug.Log("<color=green>[LeaderboardPresenter] HandleReplay() called!</color>");
             OnReplayRequested?.Invoke();
         }
 
         private void HandleExit()
         {
-            Debug.Log("<color=yellow>[LeaderboardPresenter] HandleExit() called!</color>");
             OnExitRequested?.Invoke();
         }
 

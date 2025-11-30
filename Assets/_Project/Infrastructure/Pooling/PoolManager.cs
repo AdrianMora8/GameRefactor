@@ -30,14 +30,11 @@ namespace FlappyBird.Infrastructure.Pooling
         {
             if (_pools.ContainsKey(poolName))
             {
-                Debug.LogWarning($"[PoolManager] Pool '{poolName}' already exists. Skipping creation.");
                 return;
             }
 
             var pool = new GameObjectPool(prefab, initialSize, transform);
             _pools.Add(poolName, pool);
-            
-            Debug.Log($"[PoolManager] Created pool '{poolName}' with {initialSize} objects");
         }
 
         /// <summary>
@@ -47,7 +44,6 @@ namespace FlappyBird.Infrastructure.Pooling
         {
             if (!_pools.TryGetValue(poolName, out IGenericPool pool))
             {
-                Debug.LogError($"[PoolManager] Pool '{poolName}' not found!");
                 return null;
             }
 
@@ -61,7 +57,6 @@ namespace FlappyBird.Infrastructure.Pooling
         {
             if (!_pools.TryGetValue(poolName, out IGenericPool pool))
             {
-                Debug.LogError($"[PoolManager] Pool '{poolName}' not found!");
                 return;
             }
 
@@ -77,7 +72,6 @@ namespace FlappyBird.Infrastructure.Pooling
             {
                 pool.Clear();
                 _pools.Remove(poolName);
-                Debug.Log($"[PoolManager] Cleared pool '{poolName}'");
             }
         }
 
@@ -92,7 +86,6 @@ namespace FlappyBird.Infrastructure.Pooling
             }
             
             _pools.Clear();
-            Debug.Log("[PoolManager] Cleared all pools");
         }
 
         /// <summary>
@@ -100,11 +93,7 @@ namespace FlappyBird.Infrastructure.Pooling
         /// </summary>
         public void LogPoolStats()
         {
-            Debug.Log($"[PoolManager] Total pools: {_pools.Count}");
-            foreach (var kvp in _pools)
-            {
-                Debug.Log($"  - {kvp.Key}: {kvp.Value.ActiveCount} active, {kvp.Value.AvailableCount} available");
-            }
+            // Pool statistics available via ActiveCount and AvailableCount properties
         }
 
         private void OnDestroy()

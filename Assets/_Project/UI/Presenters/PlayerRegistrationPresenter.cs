@@ -31,11 +31,6 @@ namespace FlappyBird.UI.Presenters
             // Get PlayerService
             _playerService = ServiceLocator.Get<PlayerService>();
 
-            if (_playerService == null)
-            {
-                Debug.LogError("[PlayerRegistrationPresenter] PlayerService not found!");
-            }
-
             // Setup button listener
             var startButton = _view.GetStartButton();
             if (startButton != null)
@@ -104,7 +99,6 @@ namespace FlappyBird.UI.Presenters
             try
             {
                 _playerService.RegisterPlayer(playerName);
-                Debug.Log($"[PlayerRegistrationPresenter] Player registered: {playerName}");
 
                 _view.HideError();
                 _view.ClearInput();
@@ -115,7 +109,6 @@ namespace FlappyBird.UI.Presenters
             catch (Exception e)
             {
                 _view.ShowError($"Error: {e.Message}");
-                Debug.LogError($"[PlayerRegistrationPresenter] Error registering player: {e.Message}");
             }
         }
 

@@ -30,6 +30,7 @@ namespace FlappyBird.Gameplay.Bird
         private Animator _animator;
         private Quaternion _upwardRotation;
         private Quaternion _downwardRotation;
+        private bool _hasValidAnimator = false;
 
         private static readonly int FlapAnimParam = Animator.StringToHash("Flap");
         private static readonly int DieAnimParam = Animator.StringToHash("Die");
@@ -39,9 +40,15 @@ namespace FlappyBird.Gameplay.Bird
             // Try to get Animator if it exists
             _animator = GetComponent<Animator>();
             
-            if (_animator == null)
+            // Check if animator has a valid controller
+            if (_animator != null && _animator.runtimeAnimatorController != null)
             {
-                Debug.LogWarning("[BirdView] No Animator found. Animations will be skipped.");
+                _hasValidAnimator = true;
+            }
+            else
+            {
+                _hasValidAnimator = false;
+                // No warning needed - animations are optional
             }
             
             _upwardRotation = Quaternion.Euler(0, 0, upwardRotationAngle);
@@ -78,7 +85,7 @@ namespace FlappyBird.Gameplay.Bird
         /// </summary>
         public void PlayFlapAnimation()
         {
-            if (_animator != null)
+            if (_hasValidAnimator)
             {
                 _animator.SetTrigger(FlapAnimParam);
             }
@@ -94,7 +101,7 @@ namespace FlappyBird.Gameplay.Bird
         /// </summary>
         public void PlayDeathAnimation()
         {
-            if (_animator != null)
+            if (_hasValidAnimator)
             {
                 _animator.SetTrigger(DieAnimParam);
             }

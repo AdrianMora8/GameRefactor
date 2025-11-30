@@ -16,9 +16,9 @@ MonoBehaviour:
   hitSound: {fileID: 8300000, guid: 19de7ff4d631e0947adcf607a75a593b, type: 3}
   scoreSound: {fileID: 8300000, guid: 0133b3b061579a84eb524cf8da1e1691, type: 3}
   gameStartSound: {fileID: 0}
-  gameOverSound: {fileID: 0}
+  gameOverSound: {fileID: 8300000, guid: 19de7ff4d631e0947adcf607a75a593b, type: 3}
   menuMusic: {fileID: 0}
   gameplayMusic: {fileID: 0}
   masterVolume: 1
   sfxVolume: 1
-  musicVolume: 0.5
+  musicVolume: 1

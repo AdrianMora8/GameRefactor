@@ -35,8 +35,6 @@ namespace FlappyBird.Infrastructure.Bootstrapping
 
         private void Awake()
         {
-            Debug.Log("[GameBootstrapper] Initializing game systems...");
-
             // Auto-find managers if not assigned
             if (audioManager == null) audioManager = FindObjectOfType<AudioManager>();
             if (poolManager == null) poolManager = FindObjectOfType<PoolManager>();
@@ -47,25 +45,20 @@ namespace FlappyBird.Infrastructure.Bootstrapping
 
             // Initialize services
             InitializeServices();
-
-            Debug.Log("[GameBootstrapper] Game systems initialized successfully!");
         }
 
         private void ValidateConfigurations()
         {
             if (gameConfig == null)
             {
-                Debug.LogError("[GameBootstrapper] GameConfig not assigned!");
             }
 
             if (audioConfig == null)
             {
-                Debug.LogError("[GameBootstrapper] AudioConfig not assigned!");
             }
 
             if (poolConfig == null)
             {
-                Debug.LogError("[GameBootstrapper] PoolConfig not assigned!");
             }
         }
 
@@ -85,8 +78,6 @@ namespace FlappyBird.Infrastructure.Bootstrapping
 
             // 5. Pool Service
             InitializePoolService();
-
-            Debug.Log("[GameBootstrapper] All services registered in ServiceLocator");
         }
 
         private void InitializeAudioService()
@@ -101,14 +92,12 @@ namespace FlappyBird.Infrastructure.Bootstrapping
                     // Create AudioManager
                     GameObject audioGO = new GameObject("AudioManager");
                     audioManager = audioGO.AddComponent<AudioManager>();
-                    Debug.Log("[GameBootstrapper] Created AudioManager");
                 }
             }
 
             // Wait for AudioManager to initialize in its Awake
             // We'll register it after Start
             ServiceLocator.Register<IAudioService>(audioManager);
-            Debug.Log("[GameBootstrapper] ✓ AudioService registered");
         }
 
         private void InitializeInputService()
@@ -123,27 +112,23 @@ namespace FlappyBird.Infrastructure.Bootstrapping
                     // Create InputManager
                     GameObject inputGO = new GameObject("InputManager");
                     inputManager = inputGO.AddComponent<InputManager>();
-                    Debug.Log("[GameBootstrapper] Created InputManager");
                 }
             }
 
             // InputManager registers itself in its Awake()
             // Just log that it's ready
-            Debug.Log("[GameBootstrapper] ✓ InputService will be registered by InputManager");
         }
 
         private void InitializeSaveService()
         {
             ISaveService saveService = new SaveService();
             ServiceLocator.Register<ISaveService>(saveService);
-            Debug.Log("[GameBootstrapper] ✓ SaveService registered");
         }
 
         private void InitializePlayerService()
         {
             PlayerService playerService = new PlayerService();
             ServiceLocator.Register<PlayerService>(playerService);
-            Debug.Log("[GameBootstrapper] ✓ PlayerService registered");
         }
 
         private void InitializePoolService()
@@ -158,12 +143,10 @@ namespace FlappyBird.Infrastructure.Bootstrapping
                     // Create PoolManager
                     GameObject poolGO = new GameObject("PoolManager");
                     poolManager = poolGO.AddComponent<PoolManager>();
-                    Debug.Log("[GameBootstrapper] Created PoolManager");
                 }
             }
 
             ServiceLocator.Register<IPoolService>(poolManager);
-            Debug.Log("[GameBootstrapper] ✓ PoolService registered");
         }
     }
 }

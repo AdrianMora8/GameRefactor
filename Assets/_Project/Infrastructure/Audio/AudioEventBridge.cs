@@ -32,6 +32,7 @@ namespace FlappyBird.Utilities
         [SerializeField] private GameEvent onBirdDied;
 
         private AudioManager _audioManager;
+        private bool _isSubscribed = false;
 
         private void Awake()
         {
@@ -40,40 +41,61 @@ namespace FlappyBird.Utilities
 
         private void OnEnable()
         {
-            // Subscribe to events
-            if (onBirdFlap != null)
-                onBirdFlap.RegisterListener(CreateListener(PlayFlapSound));
-            
-            if (onBirdCollision != null)
-                onBirdCollision.RegisterListener(CreateListener(PlayHitSound));
-            
-            if (onScoreSound != null)
-                onScoreSound.RegisterListener(CreateListener(PlayScoreSound));
-            
-            if (onGameStarted != null)
-                onGameStarted.RegisterListener(CreateListener(PlayGameStartSound));
-            
-            if (onBirdDied != null)
-                onBirdDied.RegisterListener(CreateListener(PlayGameOverSound));
+            SubscribeToEvents();
         }
 
         private void OnDisable()
         {
-            // Unsubscribe from events
+            UnsubscribeFromEvents();
+        }
+
+        private void OnDestroy()
+        {
+            UnsubscribeFromEvents();
+        }
+
+        private void SubscribeToEvents()
+        {
+            if (_isSubscribed) return;
+            
             if (onBirdFlap != null)
-                onBirdFlap.UnregisterListener(GetListener(PlayFlapSound));
+                onBirdFlap.RegisterListener(PlayFlapSound);
             
             if (onBirdCollision != null)
-                onBirdCollision.UnregisterListener(GetListener(PlayHitSound));
+                onBirdCollision.RegisterListener(PlayHitSound);
             
             if (onScoreSound != null)
-                onScoreSound.UnregisterListener(GetListener(PlayScoreSound));
+                onScoreSound.RegisterListener(PlayScoreSound);
             
             if (onGameStarted != null)
-                onGameStarted.UnregisterListener(GetListener(PlayGameStartSound));
+                onGameStarted.RegisterListener(PlayGameStartSound);
             
             if (onBirdDied != null)
-                onBirdDied.UnregisterListener(GetListener(PlayGameOverSound));
+                onBirdDied.RegisterListener(PlayGameOverSound);
+
+            _isSubscribed = true;
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            if (!_isSubscribed) return;
+            
+            if (onBirdFlap != null)
+                onBirdFlap.UnregisterListener(PlayFlapSound);
+            
+            if (onBirdCollision != null)
+                onBirdCollision.UnregisterListener(PlayHitSound);
+            
+            if (onScoreSound != null)
+                onScoreSound.UnregisterListener(PlayScoreSound);
+            
+            if (onGameStarted != null)
+                onGameStarted.UnregisterListener(PlayGameStartSound);
+            
+            if (onBirdDied != null)
+                onBirdDied.UnregisterListener(PlayGameOverSound);
+
+            _isSubscribed = false;
         }
 
         #region Sound Methods
@@ -101,29 +123,6 @@ namespace FlappyBird.Utilities
         private void PlayGameOverSound()
         {
             _audioManager?.PlaySFX("gameover");
-        }
-
-        #endregion
-
-        #region Helper Methods (Workaround for event system)
-
-        private GameEventListener CreateListener(System.Action action)
-        {
-            GameObject listenerObj = new GameObject($"Listener_{action.Method.Name}");
-            listenerObj.transform.SetParent(transform);
-            listenerObj.hideFlags = HideFlags.HideInHierarchy;
-
-            GameEventListener listener = listenerObj.AddComponent<GameEventListener>();
-            listener.response = new UnityEngine.Events.UnityEvent();
-            listener.response.AddListener(() => action());
-
-            return listener;
-        }
-
-        private GameEventListener GetListener(System.Action action)
-        {
-            // This is a simplified version - in production you'd store references
-            return null;
         }
 
         #endregion

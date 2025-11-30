@@ -53,10 +53,7 @@ namespace FlappyBird.Utilities.Events
 
         private void OnEventFired()
         {
-            if (enableLogging)
-            {
-                Debug.Log($"[EVENT DEBUG] {gameEvent.name}: {debugMessage}", this);
-            }
+            // Debug logging removed
         }
     }
 }

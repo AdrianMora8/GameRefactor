@@ -35,10 +35,7 @@ namespace FlappyBird.Gameplay.Environment
             {
                 _material = renderer.material;
             }
-            else
-            {
-                Debug.LogWarning("[BackgroundScroller] No Renderer found!");
-            }
+
         }
 
         private void Update()

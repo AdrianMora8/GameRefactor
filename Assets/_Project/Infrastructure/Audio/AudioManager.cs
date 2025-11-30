@@ -72,7 +72,6 @@ namespace FlappyBird.Infrastructure.Audio
 
             if (audioConfig == null)
             {
-                Debug.LogWarning("[AudioManager] AudioConfig not assigned!");
                 return;
             }
 
@@ -98,8 +97,6 @@ namespace FlappyBird.Infrastructure.Audio
             
             if (audioConfig.gameplayMusic != null)
                 _musicClips.Add("gameplay", audioConfig.gameplayMusic);
-
-            Debug.Log($"[AudioManager] Loaded {_sfxClips.Count} SFX and {_musicClips.Count} music clips");
         }
 
         private void ApplyConfiguredVolumes()
@@ -116,26 +113,25 @@ namespace FlappyBird.Infrastructure.Audio
         public void PlaySFX(string soundName)
         {
             if (_isMuted) return;
+            if (string.IsNullOrEmpty(soundName)) return;
 
             string key = soundName.ToLower();
             
-            if (_sfxClips.TryGetValue(key, out AudioClip clip))
+            if (_sfxClips != null && _sfxClips.TryGetValue(key, out AudioClip clip))
             {
                 sfxSource.PlayOneShot(clip);
             }
-            else
-            {
-                Debug.LogWarning($"[AudioManager] SFX '{soundName}' not found!");
-            }
+            // Silently ignore missing sounds - no warning needed
         }
 
         public void PlayMusic(string musicName)
         {
             if (_isMuted) return;
+            if (string.IsNullOrEmpty(musicName)) return;
 
             string key = musicName.ToLower();
             
-            if (_musicClips.TryGetValue(key, out AudioClip clip))
+            if (_musicClips != null && _musicClips.TryGetValue(key, out AudioClip clip))
             {
                 if (musicSource.clip == clip && musicSource.isPlaying)
                 {
@@ -145,12 +141,8 @@ namespace FlappyBird.Infrastructure.Audio
 
                 musicSource.clip = clip;
                 musicSource.Play();
-                Debug.Log($"[AudioManager] Playing music: {musicName}");
             }
-            else
-            {
-                Debug.LogWarning($"[AudioManager] Music '{musicName}' not found!");
-            }
+            // Silently ignore missing music
         }
 
         public void StopMusic()
@@ -158,7 +150,6 @@ namespace FlappyBird.Infrastructure.Audio
             if (musicSource.isPlaying)
             {
                 musicSource.Stop();
-                Debug.Log("[AudioManager] Music stopped");
             }
         }
 
@@ -203,13 +194,11 @@ namespace FlappyBird.Infrastructure.Audio
             {
                 sfxSource.mute = true;
                 musicSource.mute = true;
-                Debug.Log("[AudioManager] Audio muted");
             }
             else
             {
                 sfxSource.mute = false;
                 musicSource.mute = false;
-                Debug.Log("[AudioManager] Audio unmuted");
             }
         }
 

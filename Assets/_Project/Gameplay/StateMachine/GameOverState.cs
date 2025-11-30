@@ -30,7 +30,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Enter()
         {
-            Debug.Log("[GameOverState] Entered Game Over State");
             // Stop all gameplay
             // Save score
             // Show game over UI
@@ -54,7 +53,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Exit()
         {
-            Debug.Log("[GameOverState] Exiting Game Over State");
             // Hide game over UI
             // Reset game elements for next game
         }

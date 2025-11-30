@@ -54,8 +54,6 @@ namespace FlappyBird.Infrastructure.Optimization
                 T obj = CreateNewObject();
                 _pool.Enqueue(obj);
             }
-
-            Debug.Log($"[ObjectPool] Created pool for {typeof(T).Name} with {initialSize} objects");
         }
 
         /// <summary>
@@ -73,7 +71,6 @@ namespace FlappyBird.Infrastructure.Optimization
             {
                 // Pool exhausted - create new object
                 obj = CreateNewObject();
-                Debug.LogWarning($"[ObjectPool] Pool exhausted for {typeof(T).Name}, creating new object");
             }
 
             obj.gameObject.SetActive(true);
@@ -148,10 +145,7 @@ namespace FlappyBird.Infrastructure.Optimization
     {
         public static void LogPoolStats<T>(GenericObjectPool<T> pool, string poolName) where T : MonoBehaviour
         {
-            Debug.Log($"[Pool Stats] {poolName}:\n" +
-                     $"  Available: {pool.AvailableCount}\n" +
-                     $"  Active: {pool.ActiveCount}\n" +
-                     $"  Total: {pool.TotalCount}");
+            // Debug logging removed
         }
     }
 }

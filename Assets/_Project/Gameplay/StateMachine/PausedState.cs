@@ -27,7 +27,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Enter()
         {
-            Debug.Log("[PausedState] Entered Paused State");
             // Freeze physics
             Time.timeScale = 0f;
             // Show pause menu
@@ -48,7 +47,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Exit()
         {
-            Debug.Log("[PausedState] Exiting Paused State");
             // Unfreeze physics
             Time.timeScale = 1f;
             // Hide pause menu

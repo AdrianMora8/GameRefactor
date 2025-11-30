@@ -20,7 +20,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Enter()
         {
-            Debug.Log("[PlayingState] Entered Playing State");
             // Enable player control
             // Start pipe spawning
             // Enable score counting
@@ -44,7 +43,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Exit()
         {
-            Debug.Log("[PlayingState] Exiting Playing State");
             // Stop pipe spawning
         }
     }

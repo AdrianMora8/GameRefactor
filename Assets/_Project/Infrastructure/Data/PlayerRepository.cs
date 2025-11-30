@@ -47,13 +47,11 @@ namespace FlappyBird.Infrastructure.Data
         {
             if (player == null)
             {
-                Debug.LogWarning("[PlayerRepository] Attempted to save null player");
                 return;
             }
 
             _players[player.Name] = player;
             SaveToPlayerPrefs();
-            Debug.Log($"[PlayerRepository] Saved player: {player.Name} with score: {player.BestScore}");
         }
 
         public void DeletePlayer(string playerName)
@@ -61,7 +59,6 @@ namespace FlappyBird.Infrastructure.Data
             if (_players.Remove(playerName))
             {
                 SaveToPlayerPrefs();
-                Debug.Log($"[PlayerRepository] Deleted player: {playerName}");
             }
         }
 
@@ -75,7 +72,6 @@ namespace FlappyBird.Infrastructure.Data
             _players.Clear();
             PlayerPrefs.DeleteKey(PLAYERS_KEY);
             PlayerPrefs.Save();
-            Debug.Log("[PlayerRepository] Cleared all player data");
         }
 
         private void LoadPlayers()
@@ -84,7 +80,6 @@ namespace FlappyBird.Infrastructure.Data
 
             if (!PlayerPrefs.HasKey(PLAYERS_KEY))
             {
-                Debug.Log("[PlayerRepository] No saved players found");
                 return;
             }
 
@@ -104,13 +99,10 @@ namespace FlappyBird.Infrastructure.Data
                         );
                         _players[player.Name] = player;
                     }
-
-                    Debug.Log($"[PlayerRepository] Loaded {_players.Count} players");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.LogError($"[PlayerRepository] Error loading players: {e.Message}");
                 _players.Clear();
             }
         }
@@ -133,9 +125,9 @@ namespace FlappyBird.Infrastructure.Data
                 PlayerPrefs.SetString(PLAYERS_KEY, json);
                 PlayerPrefs.Save();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.LogError($"[PlayerRepository] Error saving players: {e.Message}");
+                // Error saving players
             }
         }
 

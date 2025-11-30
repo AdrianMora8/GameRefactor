@@ -83,7 +83,6 @@ namespace FlappyBird.UI.Views
         {
             if (rowsContainer == null)
             {
-                Debug.LogError("[LeaderboardView] Rows container not assigned!");
                 return;
             }
 

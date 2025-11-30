@@ -74,13 +74,11 @@ namespace FlappyBird.Infrastructure.DI
             
             if (Instance._services.ContainsKey(type))
             {
-                Debug.LogWarning($"[ServiceLocator] Service {type.Name} is already registered. Overwriting...");
                 Instance._services[type] = service;
             }
             else
             {
                 Instance._services.Add(type, service);
-                Debug.Log($"[ServiceLocator] Registered service: {type.Name}");
             }
         }
 
@@ -98,7 +96,6 @@ namespace FlappyBird.Infrastructure.DI
                 return service as T;
             }
 
-            Debug.LogError($"[ServiceLocator] Service {type.Name} not found! Make sure it's registered in GameBootstrapper.");
             return null;
         }
 
@@ -120,7 +117,6 @@ namespace FlappyBird.Infrastructure.DI
             if (Instance._services.ContainsKey(type))
             {
                 Instance._services.Remove(type);
-                Debug.Log($"[ServiceLocator] Unregistered service: {type.Name}");
             }
         }
 
@@ -130,7 +126,6 @@ namespace FlappyBird.Infrastructure.DI
         public static void Clear()
         {
             Instance._services.Clear();
-            Debug.Log("[ServiceLocator] All services cleared");
         }
 
         #endregion
@@ -142,11 +137,7 @@ namespace FlappyBird.Infrastructure.DI
         /// </summary>
         public static void LogRegisteredServices()
         {
-            Debug.Log($"[ServiceLocator] Registered services count: {Instance._services.Count}");
-            foreach (var kvp in Instance._services)
-            {
-                Debug.Log($"  - {kvp.Key.Name} → {kvp.Value.GetType().Name}");
-            }
+            // Debug logging removed
         }
 
         #endregion

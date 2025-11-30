@@ -91,9 +91,8 @@ namespace FlappyBird.Infrastructure.Save
             {
                 return JsonUtility.FromJson<GameData>(json);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.LogError($"[GameData] Failed to parse JSON: {e.Message}");
                 return new GameData();
             }
         }

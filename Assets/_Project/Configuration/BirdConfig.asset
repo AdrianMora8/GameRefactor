@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpForce: 150
   moveSpeed: 0.01
-  forwardRotationAngle: 20
-  fallingRotationAngle: -90
-  rotationSpeed: 0.05
+  gravityScale: 1
+  forwardRotationAngle: 25
+  fallingRotationAngle: -70
+  rotationSpeed: 0.1
   rotationLerpStrength: 7
   autoFlapInterval: 0.1
   autoFlapThresholdY: 0

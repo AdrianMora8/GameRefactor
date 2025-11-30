@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using FlappyBird.UI.Views;
 
 namespace FlappyBird.UI.Presenters
@@ -31,44 +30,24 @@ namespace FlappyBird.UI.Presenters
             if (playButton != null)
             {
                 playButton.onClick.AddListener(HandlePlay);
-                Debug.Log("[MainMenuPresenter] Play button listener added");
-            }
-            else
-            {
-                Debug.LogWarning("[MainMenuPresenter] Play button is NULL!");
             }
 
             var changePlayerButton = _view.GetChangePlayerButton();
             if (changePlayerButton != null)
             {
                 changePlayerButton.onClick.AddListener(HandleChangePlayer);
-                Debug.Log("[MainMenuPresenter] Change player button listener added");
-            }
-            else
-            {
-                Debug.LogWarning("[MainMenuPresenter] Change player button is NULL!");
             }
 
             var leaderboardButton = _view.GetLeaderboardButton();
             if (leaderboardButton != null)
             {
                 leaderboardButton.onClick.AddListener(HandleLeaderboard);
-                Debug.Log("[MainMenuPresenter] Leaderboard button listener added");
-            }
-            else
-            {
-                Debug.LogWarning("[MainMenuPresenter] Leaderboard button is NULL - this is OK if not implemented");
             }
 
             var quitButton = _view.GetQuitButton();
             if (quitButton != null)
             {
                 quitButton.onClick.AddListener(HandleQuit);
-                Debug.Log("[MainMenuPresenter] Quit button listener added");
-            }
-            else
-            {
-                Debug.LogWarning("[MainMenuPresenter] Quit button is NULL - this is OK");
             }
         }
 
@@ -90,25 +69,21 @@ namespace FlappyBird.UI.Presenters
 
         private void HandlePlay()
         {
-            Debug.Log("<color=green>[MainMenuPresenter] HandlePlay() called!</color>");
             OnPlayRequested?.Invoke();
         }
 
         private void HandleChangePlayer()
         {
-            Debug.Log("<color=yellow>[MainMenuPresenter] HandleChangePlayer() called!</color>");
             OnChangePlayerRequested?.Invoke();
         }
 
         private void HandleLeaderboard()
         {
-            Debug.Log("<color=magenta>[MainMenuPresenter] HandleLeaderboard() called!</color>");
             OnLeaderboardRequested?.Invoke();
         }
 
         private void HandleQuit()
         {
-            Debug.Log("<color=red>[MainMenuPresenter] HandleQuit() called!</color>");
             OnQuitRequested?.Invoke();
         }
 

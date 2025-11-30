@@ -21,12 +21,23 @@ namespace FlappyBird.Gameplay.Effects
         [SerializeField] private float shakeMagnitude = 0.1f;
         [SerializeField] private float dampingSpeed = 1.0f;
 
+        private static CameraShake _instance;
+        public static CameraShake Instance => _instance;
+
         private Transform _cameraTransform;
         private Vector3 _initialPosition;
         private float _shakeTimer = 0f;
 
         private void Awake()
         {
+            // Singleton setup
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+            _instance = this;
+
             _cameraTransform = transform;
             _initialPosition = _cameraTransform.localPosition;
         }

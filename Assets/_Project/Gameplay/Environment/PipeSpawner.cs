@@ -57,7 +57,6 @@ namespace FlappyBird.Gameplay.Environment
 
             if (_poolService == null)
             {
-                Debug.LogError("[PipeSpawner] PoolService not found!");
                 return;
             }
 
@@ -65,11 +64,6 @@ namespace FlappyBird.Gameplay.Environment
             if (pipePrefab != null)
             {
                 _poolService.CreatePool(PIPE_POOL_NAME, pipePrefab, 5);
-                Debug.Log("[PipeSpawner] Pipe pool created");
-            }
-            else
-            {
-                Debug.LogError("[PipeSpawner] Pipe prefab not assigned!");
             }
         }
 
@@ -82,7 +76,6 @@ namespace FlappyBird.Gameplay.Environment
 
             _isSpawning = true;
             _spawnCoroutine = StartCoroutine(SpawnRoutine());
-            Debug.Log("[PipeSpawner] Started spawning pipes");
         }
 
         /// <summary>
@@ -99,8 +92,6 @@ namespace FlappyBird.Gameplay.Environment
                 StopCoroutine(_spawnCoroutine);
                 _spawnCoroutine = null;
             }
-
-            Debug.Log("[PipeSpawner] Stopped spawning pipes");
         }
 
         /// <summary>
@@ -116,8 +107,6 @@ namespace FlappyBird.Gameplay.Environment
             {
                 pipe.Deactivate();
             }
-
-            Debug.Log("[PipeSpawner] All pipes cleared");
         }
 
         private IEnumerator SpawnRoutine()
@@ -150,10 +139,6 @@ namespace FlappyBird.Gameplay.Environment
                     // Pass current dynamic gap and speed to avoid visual repositioning
                     pipeComponent.Activate(spawnPosition, _currentPipeSpeed, _currentPipeGap);
                 }
-                else
-                {
-                    Debug.LogWarning("[PipeSpawner] Pipe component not found on spawned object!");
-                }
             }
         }
 
@@ -163,7 +148,6 @@ namespace FlappyBird.Gameplay.Environment
         public void SetSpawnRate(float rate)
         {
             _currentSpawnInterval = rate;
-            Debug.Log($"[PipeSpawner] Spawn rate set to: {rate}s");
         }
 
         /// <summary>
@@ -172,7 +156,6 @@ namespace FlappyBird.Gameplay.Environment
         public void SetPipeGap(float gap)
         {
             _currentPipeGap = gap;
-            Debug.Log($"[PipeSpawner] Pipe gap set to: {gap}");
         }
 
         /// <summary>
@@ -182,7 +165,6 @@ namespace FlappyBird.Gameplay.Environment
         {
             _currentPipeSpeed = speed;
             pipeSpeed = speed; // Update serialized field too
-            Debug.Log($"[PipeSpawner] Pipe speed set to: {speed}");
         }
 
         private void OnDrawGizmosSelected()

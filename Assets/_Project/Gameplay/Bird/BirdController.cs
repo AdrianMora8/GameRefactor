@@ -37,9 +37,8 @@ namespace FlappyBird.Gameplay.Bird
         [SerializeField] private GameEvent onBirdFlapped;
 
         [Header("Audio")]
-        [SerializeField] private string flapSoundKey = "Flap";
-        [SerializeField] private string hitSoundKey = "Hit";
-        [SerializeField] private string dieSoundKey = "Die";
+        [SerializeField] private string flapSoundKey = "flap";
+        [SerializeField] private string hitSoundKey = "hit";
 
         // Services
         private IAudioService _audioService;
@@ -53,6 +52,7 @@ namespace FlappyBird.Gameplay.Bird
         private Core.Entities.Bird _birdEntity;
         private bool _isAutoFlapping;
         private bool _canFlap = true;
+        private Coroutine _autoFlapCoroutine;
 
         public bool IsDead => _birdEntity?.IsDead ?? false;
         public Vector3 StartPosition { get; private set; }
@@ -69,7 +69,6 @@ namespace FlappyBird.Gameplay.Bird
             // Validate config
             if (birdConfig == null)
             {
-                Debug.LogError("[BirdController] BirdConfig not assigned!");
             }
         }
 
@@ -78,7 +77,6 @@ namespace FlappyBird.Gameplay.Bird
             // Validate view
             if (_view == null)
             {
-                Debug.LogError("[BirdController] BirdView component not found! Please add BirdView component.");
                 yield break;
             }
 
@@ -97,10 +95,6 @@ namespace FlappyBird.Gameplay.Bird
             {
                 _view.Configure(birdConfig);
                 ConfigurePhysics();
-            }
-            else
-            {
-                Debug.LogError("[BirdController] BirdConfig not assigned!");
             }
 
             // Start in idle state
@@ -150,11 +144,11 @@ namespace FlappyBird.Gameplay.Bird
         /// </summary>
         public void StartAutoFlap()
         {
-            if (!_isAutoFlapping)
-            {
-                _isAutoFlapping = true;
-                StartCoroutine(AutoFlapRoutine());
-            }
+            // Stop any existing auto-flap coroutine first
+            StopAutoFlap();
+            
+            _isAutoFlapping = true;
+            _autoFlapCoroutine = StartCoroutine(AutoFlapRoutine());
         }
 
         /// <summary>
@@ -163,6 +157,13 @@ namespace FlappyBird.Gameplay.Bird
         public void StopAutoFlap()
         {
             _isAutoFlapping = false;
+            
+            // Explicitly stop the coroutine to prevent sound loops
+            if (_autoFlapCoroutine != null)
+            {
+                StopCoroutine(_autoFlapCoroutine);
+                _autoFlapCoroutine = null;
+            }
         }
 
         /// <summary>
@@ -189,6 +190,22 @@ namespace FlappyBird.Gameplay.Bird
         /// </summary>
         private void Flap()
         {
+            FlapInternal(playSound: true);
+        }
+
+        /// <summary>
+        /// Execute silent flap (for auto-flap in menu)
+        /// </summary>
+        private void SilentFlap()
+        {
+            FlapInternal(playSound: false);
+        }
+
+        /// <summary>
+        /// Internal flap logic
+        /// </summary>
+        private void FlapInternal(bool playSound)
+        {
             if (birdConfig == null) return;
 
             // Physics
@@ -202,13 +219,11 @@ namespace FlappyBird.Gameplay.Bird
                 _view.PlayFlapAnimation();
             }
 
-            // Audio
-            _audioService?.PlaySFX(flapSoundKey);
-
-            // Event
-            onBirdFlapped?.Raise();
-
-            Debug.Log("[BirdController] Flapped!");
+            // Event (AudioEventBridge handles the sound) - only if playSound is true
+            if (playSound)
+            {
+                onBirdFlapped?.Raise();
+            }
         }
 
         /// <summary>
@@ -220,7 +235,7 @@ namespace FlappyBird.Gameplay.Bird
             {
                 if (transform.position.y <= 0)
                 {
-                    Flap();
+                    SilentFlap(); // Use silent flap - no sound in menu
                 }
                 yield return new WaitForSeconds(0.1f);
             }
@@ -254,11 +269,7 @@ namespace FlappyBird.Gameplay.Bird
                 _view.PlayDeathAnimation();
             }
 
-            // Audio
-            _audioService?.PlaySFX(hitSoundKey);
-            _audioService?.PlaySFX(dieSoundKey);
-
-            // Event
+            // Event (AudioEventBridge handles the sound)
             onBirdDied?.Raise();
         }
 
@@ -267,6 +278,9 @@ namespace FlappyBird.Gameplay.Bird
         /// </summary>
         public void ResetBird()
         {
+            // Stop any running auto-flap coroutine FIRST
+            StopAutoFlap();
+            
             // Reset entity
             _birdEntity = new Core.Entities.Bird();
 
@@ -283,11 +297,6 @@ namespace FlappyBird.Gameplay.Bird
             {
                 _view.ResetVisuals();
             }
-
-            // Stop auto-flap
-            StopAutoFlap();
-
-            Debug.Log("[BirdController] Bird reset");
         }
 
         #region Collision Detection

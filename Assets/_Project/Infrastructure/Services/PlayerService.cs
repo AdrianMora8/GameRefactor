@@ -59,7 +59,6 @@ namespace FlappyBird.Infrastructure.Services
         {
             if (_currentPlayer == null)
             {
-                UnityEngine.Debug.LogWarning("[PlayerService] No current player set");
                 return false;
             }
 

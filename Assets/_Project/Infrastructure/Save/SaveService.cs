@@ -32,11 +32,6 @@ namespace FlappyBird.Infrastructure.Save
         {
             PlayerPrefs.SetInt(key, value);
             PlayerPrefs.Save();
-            
-            if (Application.isEditor)
-            {
-                Debug.Log($"[SaveService] Saved int: {key} = {value}");
-            }
         }
 
         public int LoadInt(string key, int defaultValue = 0)
@@ -48,11 +43,6 @@ namespace FlappyBird.Infrastructure.Save
         {
             PlayerPrefs.SetFloat(key, value);
             PlayerPrefs.Save();
-            
-            if (Application.isEditor)
-            {
-                Debug.Log($"[SaveService] Saved float: {key} = {value}");
-            }
         }
 
         public float LoadFloat(string key, float defaultValue = 0f)
@@ -64,11 +54,6 @@ namespace FlappyBird.Infrastructure.Save
         {
             PlayerPrefs.SetString(key, value);
             PlayerPrefs.Save();
-            
-            if (Application.isEditor)
-            {
-                Debug.Log($"[SaveService] Saved string: {key} = {value}");
-            }
         }
 
         public string LoadString(string key, string defaultValue = "")
@@ -81,11 +66,6 @@ namespace FlappyBird.Infrastructure.Save
             // PlayerPrefs doesn't support bool, so we convert to int
             PlayerPrefs.SetInt(key, value ? 1 : 0);
             PlayerPrefs.Save();
-            
-            if (Application.isEditor)
-            {
-                Debug.Log($"[SaveService] Saved bool: {key} = {value}");
-            }
         }
 
         public bool LoadBool(string key, bool defaultValue = false)
@@ -104,7 +84,6 @@ namespace FlappyBird.Infrastructure.Save
             {
                 PlayerPrefs.DeleteKey(key);
                 PlayerPrefs.Save();
-                Debug.Log($"[SaveService] Deleted key: {key}");
             }
         }
 
@@ -112,7 +91,6 @@ namespace FlappyBird.Infrastructure.Save
         {
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
-            Debug.LogWarning("[SaveService] All save data deleted!");
         }
 
         #endregion
@@ -146,9 +124,7 @@ namespace FlappyBird.Infrastructure.Save
         /// </summary>
         public void LogAllSavedData()
         {
-            Debug.Log("[SaveService] Saved data (partial list):");
-            Debug.Log($"  BestScore: {LoadInt("BestScore", 0)}");
-            Debug.Log($"  SoundEnabled: {LoadBool("SoundEnabled", true)}");
+            // Saved data available via Load methods
         }
 
         #endregion
@@ -180,7 +156,6 @@ namespace FlappyBird.Infrastructure.Save
             }
             catch
             {
-                Debug.LogWarning("[SaveService] Failed to decrypt data");
                 return "";
             }
         }

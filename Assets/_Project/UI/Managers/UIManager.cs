@@ -72,7 +72,6 @@ namespace FlappyBird.UI.Managers
                 _mainMenuPresenter.OnPlayRequested += HandlePlayRequested;
                 _mainMenuPresenter.OnChangePlayerRequested += HandleChangePlayerRequested;
                 _mainMenuPresenter.OnLeaderboardRequested += HandleLeaderboardFromMenuRequested;
-                Debug.Log("[UIManager] MainMenuPresenter initialized with all event handlers");
             }
 
             // Gameplay HUD Presenter
@@ -87,11 +86,6 @@ namespace FlappyBird.UI.Managers
                 _leaderboardPresenter = new LeaderboardPresenter(leaderboardView);
                 _leaderboardPresenter.OnReplayRequested += HandleLeaderboardReplayRequested;
                 _leaderboardPresenter.OnExitRequested += HandleLeaderboardExitRequested;
-                Debug.Log("[UIManager] LeaderboardPresenter initialized");
-            }
-            else
-            {
-                Debug.LogWarning("[UIManager] LeaderboardView not assigned - leaderboard feature disabled");
             }
 
             // Pause Presenter
@@ -150,7 +144,6 @@ namespace FlappyBird.UI.Managers
         /// </summary>
         public void ShowGameOver(int currentScore, int bestScore, bool isNewBest)
         {
-            Debug.Log($"[UIManager] Game Over! Score: {currentScore}, Best: {bestScore}, NewBest: {isNewBest}");
             ShowLeaderboard();
         }
 
@@ -182,7 +175,6 @@ namespace FlappyBird.UI.Managers
         /// </summary>
         public void RequestChangePlayer()
         {
-            Debug.Log("<color=cyan>[UIManager] RequestChangePlayer() called via public method</color>");
             HandleChangePlayerRequested();
         }
 
@@ -191,7 +183,6 @@ namespace FlappyBird.UI.Managers
         /// </summary>
         public void RequestShowLeaderboard()
         {
-            Debug.Log("<color=cyan>[UIManager] RequestShowLeaderboard() called via public method</color>");
             ShowLeaderboard();
         }
 
@@ -200,7 +191,6 @@ namespace FlappyBird.UI.Managers
         /// </summary>
         public void RequestPlay()
         {
-            Debug.Log("<color=cyan>[UIManager] RequestPlay() called via public method</color>");
             HandlePlayRequested();
         }
 
@@ -209,7 +199,6 @@ namespace FlappyBird.UI.Managers
         /// </summary>
         public void RequestMainMenu()
         {
-            Debug.Log("<color=cyan>[UIManager] RequestMainMenu() called via public method</color>");
             HandleMenuRequested();
         }
 
@@ -218,7 +207,6 @@ namespace FlappyBird.UI.Managers
         /// </summary>
         public void RequestRestart()
         {
-            Debug.Log("<color=cyan>[UIManager] RequestRestart() called via public method</color>");
             HandleRestartRequested();
         }
 
@@ -228,38 +216,32 @@ namespace FlappyBird.UI.Managers
 
         private void HandlePlayerRegistered(string playerName)
         {
-            Debug.Log($"[UIManager] Player '{playerName}' registered - showing main menu");
             ShowMainMenu();
         }
 
         private void HandleChangePlayerRequested()
         {
-            Debug.Log("[UIManager] Change player requested - showing registration");
             ShowPlayerRegistration();
         }
 
         private void HandleLeaderboardFromMenuRequested()
         {
-            Debug.Log("[UIManager] Leaderboard requested from main menu");
             ShowLeaderboard();
         }
 
         private void HandlePlayRequested()
         {
-            Debug.Log("[UIManager] Play requested - hiding main menu");
             ShowGameplayHUD(); // Ocultar menú inmediatamente
             _gameFlowManager?.StartGame();
         }
 
         private void HandleRestartRequested()
         {
-            Debug.Log("[UIManager] Restart requested");
             _gameFlowManager?.RestartGame();
         }
 
         private void HandleMenuRequested()
         {
-            Debug.Log("[UIManager] Menu requested - returning to main menu");
             // Ocultar todas las pantallas y mostrar menú principal
             _gameplayHUDPresenter?.Hide();
             _leaderboardPresenter?.Hide();
@@ -270,14 +252,12 @@ namespace FlappyBird.UI.Managers
 
         private void HandleLeaderboardReplayRequested()
         {
-            Debug.Log("[UIManager] Leaderboard replay requested");
             _leaderboardPresenter?.Hide();
             _gameFlowManager?.RestartGame();
         }
 
         private void HandleLeaderboardExitRequested()
         {
-            Debug.Log("[UIManager] Leaderboard exit requested - returning to main menu");
             _leaderboardPresenter?.Hide();
             ShowMainMenu();
             _gameFlowManager?.ReturnToMenu();
@@ -285,15 +265,12 @@ namespace FlappyBird.UI.Managers
 
         private void OnGameStarted()
         {
-            Debug.Log("[UIManager] Game started - showing gameplay HUD");
             ShowGameplayHUD();
             _gameplayHUDPresenter?.StartGame();
         }
 
         private void OnGameOver()
         {
-            Debug.Log("[UIManager] Game over - showing game over screen");
-            
             if (_gameFlowManager != null)
             {
                 int currentScore = _gameFlowManager.GetCurrentScore();

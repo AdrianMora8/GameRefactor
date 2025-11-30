@@ -44,11 +44,6 @@ namespace FlappyBird.Gameplay.StateMachine
             if (!_states.ContainsKey(state.StateType))
             {
                 _states.Add(state.StateType, state);
-                Debug.Log($"[StateMachine] Registered state: {state.StateType}");
-            }
-            else
-            {
-                Debug.LogWarning($"[StateMachine] State {state.StateType} already registered");
             }
         }
 
@@ -59,7 +54,6 @@ namespace FlappyBird.Gameplay.StateMachine
         {
             if (!_states.TryGetValue(newStateType, out IGameState newState))
             {
-                Debug.LogError($"[StateMachine] State {newStateType} not registered!");
                 return;
             }
 
@@ -82,8 +76,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
             // Raise event
             OnStateChanged?.Invoke(previousStateType, newStateType);
-
-            Debug.Log($"[StateMachine] State changed: {previousStateType} → {newStateType}");
         }
 
         /// <summary>
@@ -95,11 +87,6 @@ namespace FlappyBird.Gameplay.StateMachine
             {
                 _currentState = state;
                 _currentState.Enter();
-                Debug.Log($"[StateMachine] Initialized with state: {startingState}");
-            }
-            else
-            {
-                Debug.LogError($"[StateMachine] Starting state {startingState} not registered!");
             }
         }
 

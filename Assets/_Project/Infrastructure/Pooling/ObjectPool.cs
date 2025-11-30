@@ -68,7 +68,6 @@ namespace FlappyBird.Infrastructure.Pooling
             {
                 // Create new object if pool is empty
                 obj = CreateNewObject();
-                Debug.LogWarning($"[ObjectPool] Pool exhausted for {typeof(T).Name}, creating new instance. Consider increasing pool size.");
             }
 
             obj.gameObject.SetActive(true);
@@ -93,13 +92,11 @@ namespace FlappyBird.Infrastructure.Pooling
         {
             if (obj == null)
             {
-                Debug.LogWarning("[ObjectPool] Attempting to return null object");
                 return;
             }
 
             if (!_allObjects.Contains(obj))
             {
-                Debug.LogWarning($"[ObjectPool] Attempting to return object that doesn't belong to this pool: {obj.name}");
                 return;
             }
 

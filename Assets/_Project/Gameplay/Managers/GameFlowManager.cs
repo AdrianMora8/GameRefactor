@@ -76,7 +76,6 @@ namespace FlappyBird.Gameplay.Managers
             // Validate dependencies
             if (!ValidateDependencies())
             {
-                Debug.LogError("[GameFlowManager] Missing dependencies! Cannot initialize.");
                 return;
             }
 
@@ -91,7 +90,6 @@ namespace FlappyBird.Gameplay.Managers
             StartMenuState();
 
             _isInitialized = true;
-            Debug.Log("[GameFlowManager] Game initialized successfully!");
         }
 
         private bool ValidateDependencies()
@@ -100,19 +98,16 @@ namespace FlappyBird.Gameplay.Managers
 
             if (birdController == null)
             {
-                Debug.LogError("[GameFlowManager] BirdController not assigned!");
                 isValid = false;
             }
 
             if (gameConfig == null)
             {
-                Debug.LogError("[GameFlowManager] GameConfig not assigned!");
                 isValid = false;
             }
 
             if (_inputService == null)
             {
-                Debug.LogError("[GameFlowManager] InputService not found!");
                 isValid = false;
             }
 
@@ -131,8 +126,6 @@ namespace FlappyBird.Gameplay.Managers
 
             // Subscribe to state changes
             _stateMachine.OnStateChanged += OnStateChanged;
-
-            Debug.Log("[GameFlowManager] State machine initialized");
         }
 
         private void SubscribeToEvents()
@@ -203,8 +196,6 @@ namespace FlappyBird.Gameplay.Managers
 
         private void OnStateChanged(GameState previousState, GameState newState)
         {
-            Debug.Log($"[GameFlowManager] State: {previousState} → {newState}");
-
             // Handle state-specific setup
             switch (newState)
             {
@@ -257,8 +248,6 @@ namespace FlappyBird.Gameplay.Managers
             
             if (groundScroller != null)
                 groundScroller.StartScrolling();
-
-            Debug.Log("[GameFlowManager] Menu state ready");
         }
 
         /// <summary>
@@ -268,7 +257,6 @@ namespace FlappyBird.Gameplay.Managers
         {
             if (_stateMachine.CurrentStateType != GameState.Menu)
             {
-                Debug.LogWarning("[GameFlowManager] Can only start game from Menu state");
                 return;
             }
 
@@ -298,8 +286,6 @@ namespace FlappyBird.Gameplay.Managers
 
             // Play start sound
             _audioService?.PlaySFX("Start");
-
-            Debug.Log("[GameFlowManager] Game started!");
         }
 
         /// <summary>
@@ -309,12 +295,10 @@ namespace FlappyBird.Gameplay.Managers
         {
             if (_stateMachine.CurrentStateType != GameState.Playing)
             {
-                Debug.LogWarning("[GameFlowManager] Can only pause from Playing state");
                 return;
             }
 
             _stateMachine.ChangeState(GameState.Paused);
-            Debug.Log("[GameFlowManager] Game paused");
         }
 
         /// <summary>
@@ -324,12 +308,10 @@ namespace FlappyBird.Gameplay.Managers
         {
             if (_stateMachine.CurrentStateType != GameState.Paused)
             {
-                Debug.LogWarning("[GameFlowManager] Can only resume from Paused state");
                 return;
             }
 
             _stateMachine.ChangeState(GameState.Playing);
-            Debug.Log("[GameFlowManager] Game resumed");
         }
 
         /// <summary>
@@ -361,8 +343,6 @@ namespace FlappyBird.Gameplay.Managers
 
             // Transition to game over
             _stateMachine.ChangeState(GameState.GameOver);
-
-            Debug.Log("[GameFlowManager] Game over!");
         }
 
         /// <summary>
@@ -376,25 +356,12 @@ namespace FlappyBird.Gameplay.Managers
                 if (playerService != null)
                 {
                     int currentScore = GetCurrentScore();
-                    bool isNewRecord = playerService.UpdateCurrentPlayerScore(currentScore);
-                    
-                    if (isNewRecord)
-                    {
-                        Debug.Log($"[GameFlowManager] NEW RECORD! Score {currentScore} saved to PlayerService");
-                    }
-                    else
-                    {
-                        Debug.Log($"[GameFlowManager] Score {currentScore} saved to PlayerService");
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("[GameFlowManager] PlayerService not found - score not saved to leaderboard");
+                    playerService.UpdateCurrentPlayerScore(currentScore);
                 }
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Debug.LogError($"[GameFlowManager] Error saving score to PlayerService: {e.Message}");
+                // Score not saved to leaderboard
             }
         }
 
@@ -405,15 +372,12 @@ namespace FlappyBird.Gameplay.Managers
         {
             if (_stateMachine.CurrentStateType != GameState.GameOver)
             {
-                Debug.LogWarning("[GameFlowManager] Can only restart from GameOver state");
                 return;
             }
 
             // Go back to menu
             _stateMachine.ChangeState(GameState.Menu);
             StartMenuState();
-
-            Debug.Log("[GameFlowManager] Game restarted");
         }
 
         /// <summary>
@@ -423,8 +387,6 @@ namespace FlappyBird.Gameplay.Managers
         {
             _stateMachine.ChangeState(GameState.Menu);
             StartMenuState();
-
-            Debug.Log("[GameFlowManager] Returned to menu");
         }
 
         #endregion
@@ -472,9 +434,6 @@ namespace FlappyBird.Gameplay.Managers
 
             _scoreService.AddScore(1);
             _audioService?.PlaySFX("Point");
-
-            (int current, int _) = _scoreService.GetScores();
-            Debug.Log($"[GameFlowManager] Score: {current}");
         }
 
         /// <summary>

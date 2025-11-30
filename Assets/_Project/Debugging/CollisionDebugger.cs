@@ -21,34 +21,18 @@ namespace FlappyBird.Debugging
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (logTriggers)
-            {
-                Debug.Log($"<color=cyan>[TRIGGER ENTER]</color> {gameObject.name} → {collision.gameObject.name} | Tag: {collision.gameObject.tag} | Layer: {LayerMask.LayerToName(collision.gameObject.layer)}");
-            }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (logCollisions)
-            {
-                Debug.Log($"<color=red>[COLLISION ENTER]</color> {gameObject.name} → {collision.gameObject.name} | Tag: {collision.gameObject.tag} | Layer: {LayerMask.LayerToName(collision.gameObject.layer)}");
-            }
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            if (logTriggers)
-            {
-                Debug.Log($"<color=yellow>[TRIGGER EXIT]</color> {gameObject.name} → {collision.gameObject.name}");
-            }
         }
 
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if (logCollisions)
-            {
-                Debug.Log($"<color=orange>[COLLISION EXIT]</color> {gameObject.name} → {collision.gameObject.name}");
-            }
         }
 
         private void OnDrawGizmos()

@@ -27,7 +27,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Enter()
         {
-            Debug.Log("[MenuState] Entered Menu State");
             // Reset game elements
             // Bird positioned at start
             // Auto-flap active
@@ -48,7 +47,6 @@ namespace FlappyBird.Gameplay.StateMachine
 
         public void Exit()
         {
-            Debug.Log("[MenuState] Exiting Menu State");
             _onGameStarted?.Raise();
         }
     }

@@ -51,12 +51,10 @@ namespace FlappyBird.Infrastructure.Input
             if (forcePC)
             {
                 isMobile = false;
-                Debug.Log("[InputManager] 🖥️ Forcing PC input mode");
             }
             else if (forceMobile)
             {
                 isMobile = true;
-                Debug.Log("[InputManager] 📱 Forcing Mobile input mode");
             }
 
             // Create appropriate input handler
@@ -64,13 +62,11 @@ namespace FlappyBird.Infrastructure.Input
             {
                 _inputHandler = new MobileInputHandler();
                 _inputService = new MobileInputProvider();
-                Debug.Log("[InputManager] 📱 Mobile input initialized (Touch)");
             }
             else
             {
                 _inputHandler = new PCInputHandler();
                 _inputService = new PCInputProvider();
-                Debug.Log("[InputManager] 🖥️ PC input initialized (Keyboard/Mouse)");
             }
 
             // Register with ServiceLocator
