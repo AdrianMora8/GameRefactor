@@ -16,6 +16,8 @@ namespace FlappyBird.UI.Views
     {
         [Header("Buttons")]
         [SerializeField] private Button playButton;
+        [SerializeField] private Button changePlayerButton;
+        [SerializeField] private Button leaderboardButton;
         [SerializeField] private Button quitButton;
 
         [Header("Panels")]
@@ -25,6 +27,16 @@ namespace FlappyBird.UI.Views
         /// Get play button (for presenter)
         /// </summary>
         public Button GetPlayButton() => playButton;
+
+        /// <summary>
+        /// Get change player button (for presenter)
+        /// </summary>
+        public Button GetChangePlayerButton() => changePlayerButton;
+
+        /// <summary>
+        /// Get leaderboard button (for presenter)
+        /// </summary>
+        public Button GetLeaderboardButton() => leaderboardButton;
 
         /// <summary>
         /// Get quit button (for presenter)

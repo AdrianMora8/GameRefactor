@@ -18,6 +18,8 @@ namespace FlappyBird.UI.Presenters
         private readonly MainMenuView _view;
 
         public event Action OnPlayRequested;
+        public event Action OnChangePlayerRequested;
+        public event Action OnLeaderboardRequested;
         public event Action OnQuitRequested;
 
         public MainMenuPresenter(MainMenuView view)
@@ -34,6 +36,28 @@ namespace FlappyBird.UI.Presenters
             else
             {
                 Debug.LogWarning("[MainMenuPresenter] Play button is NULL!");
+            }
+
+            var changePlayerButton = _view.GetChangePlayerButton();
+            if (changePlayerButton != null)
+            {
+                changePlayerButton.onClick.AddListener(HandleChangePlayer);
+                Debug.Log("[MainMenuPresenter] Change player button listener added");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuPresenter] Change player button is NULL!");
+            }
+
+            var leaderboardButton = _view.GetLeaderboardButton();
+            if (leaderboardButton != null)
+            {
+                leaderboardButton.onClick.AddListener(HandleLeaderboard);
+                Debug.Log("[MainMenuPresenter] Leaderboard button listener added");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuPresenter] Leaderboard button is NULL - this is OK if not implemented");
             }
 
             var quitButton = _view.GetQuitButton();
@@ -70,6 +94,18 @@ namespace FlappyBird.UI.Presenters
             OnPlayRequested?.Invoke();
         }
 
+        private void HandleChangePlayer()
+        {
+            Debug.Log("<color=yellow>[MainMenuPresenter] HandleChangePlayer() called!</color>");
+            OnChangePlayerRequested?.Invoke();
+        }
+
+        private void HandleLeaderboard()
+        {
+            Debug.Log("<color=magenta>[MainMenuPresenter] HandleLeaderboard() called!</color>");
+            OnLeaderboardRequested?.Invoke();
+        }
+
         private void HandleQuit()
         {
             Debug.Log("<color=red>[MainMenuPresenter] HandleQuit() called!</color>");
@@ -85,6 +121,18 @@ namespace FlappyBird.UI.Presenters
             if (playButton != null)
             {
                 playButton.onClick.RemoveListener(HandlePlay);
+            }
+
+            var changePlayerButton = _view.GetChangePlayerButton();
+            if (changePlayerButton != null)
+            {
+                changePlayerButton.onClick.RemoveListener(HandleChangePlayer);
+            }
+
+            var leaderboardButton = _view.GetLeaderboardButton();
+            if (leaderboardButton != null)
+            {
+                leaderboardButton.onClick.RemoveListener(HandleLeaderboard);
             }
 
             var quitButton = _view.GetQuitButton();

@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using FlappyBird.Core.Entities;
 using FlappyBird.Core.Interfaces;
 using FlappyBird.Core.Services;
 using FlappyBird.Gameplay.StateMachine;
 using FlappyBird.Gameplay.Bird;
 using FlappyBird.Infrastructure.DI;
+using FlappyBird.Infrastructure.Services;
 using FlappyBird.Utilities.Events;
 using FlappyBird.Configuration;
 
@@ -153,6 +155,9 @@ namespace FlappyBird.Gameplay.Managers
         private void HandleInput()
         {
             if (_inputService == null) return;
+
+            // IMPORTANT: Ignore input if clicking on UI elements
+            if (IsPointerOverUI()) return;
 
             GameState currentState = _stateMachine.CurrentStateType;
 
@@ -348,13 +353,49 @@ namespace FlappyBird.Gameplay.Managers
             if (groundScroller != null)
                 groundScroller.StopScrolling();
 
-            // Save score
+            // Save score to ScoreService (local best)
             _scoreService.SaveBestScore();
+
+            // Save score to PlayerService (for leaderboard)
+            SaveScoreToPlayerService();
 
             // Transition to game over
             _stateMachine.ChangeState(GameState.GameOver);
 
             Debug.Log("[GameFlowManager] Game over!");
+        }
+
+        /// <summary>
+        /// Save current score to PlayerService for leaderboard
+        /// </summary>
+        private void SaveScoreToPlayerService()
+        {
+            try
+            {
+                var playerService = ServiceLocator.Get<PlayerService>();
+                if (playerService != null)
+                {
+                    int currentScore = GetCurrentScore();
+                    bool isNewRecord = playerService.UpdateCurrentPlayerScore(currentScore);
+                    
+                    if (isNewRecord)
+                    {
+                        Debug.Log($"[GameFlowManager] NEW RECORD! Score {currentScore} saved to PlayerService");
+                    }
+                    else
+                    {
+                        Debug.Log($"[GameFlowManager] Score {currentScore} saved to PlayerService");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("[GameFlowManager] PlayerService not found - score not saved to leaderboard");
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[GameFlowManager] Error saving score to PlayerService: {e.Message}");
+            }
         }
 
         /// <summary>
@@ -384,6 +425,35 @@ namespace FlappyBird.Gameplay.Managers
             StartMenuState();
 
             Debug.Log("[GameFlowManager] Returned to menu");
+        }
+
+        #endregion
+
+        #region UI Input Helpers
+
+        /// <summary>
+        /// Check if pointer/mouse is over a UI element
+        /// This prevents game input when clicking buttons
+        /// </summary>
+        private bool IsPointerOverUI()
+        {
+            // Check for mouse/touch over UI
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return true;
+            }
+
+            // Also check for touch input on mobile
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion

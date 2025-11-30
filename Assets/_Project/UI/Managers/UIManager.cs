@@ -2,7 +2,6 @@ using UnityEngine;
 using FlappyBird.UI.Views;
 using FlappyBird.UI.Presenters;
 using FlappyBird.Utilities.Events;
-using FlappyBird.Core.Entities;
 
 namespace FlappyBird.UI.Managers
 {
@@ -21,19 +20,23 @@ namespace FlappyBird.UI.Managers
     public class UIManager : MonoBehaviour
     {
         [Header("Views")]
+        [SerializeField] private PlayerRegistrationView playerRegistrationView;
         [SerializeField] private MainMenuView mainMenuView;
         [SerializeField] private GameplayHUDView gameplayHUDView;
-        [SerializeField] private GameOverView gameOverView;
+        [SerializeField] private LeaderboardView leaderboardView;
 
         [Header("Events")]
         [SerializeField] private IntGameEvent onScoreChanged;
         [SerializeField] private GameEvent onGameStarted;
         [SerializeField] private GameEvent onGameOver;
 
+
+
         // Presenters
+        private PlayerRegistrationPresenter _playerRegistrationPresenter;
         private MainMenuPresenter _mainMenuPresenter;
         private GameplayHUDPresenter _gameplayHUDPresenter;
-        private GameOverPresenter _gameOverPresenter;
+        private LeaderboardPresenter _leaderboardPresenter;
 
         // Reference to GameFlowManager
         private Gameplay.Managers.GameFlowManager _gameFlowManager;
@@ -49,17 +52,27 @@ namespace FlappyBird.UI.Managers
             // Subscribe to game events
             SubscribeToEvents();
 
-            // Start with main menu
-            ShowMainMenu();
+            // Start with player registration
+            ShowPlayerRegistration();
         }
 
         private void InitializePresenters()
         {
+            // Player Registration Presenter
+            if (playerRegistrationView != null)
+            {
+                _playerRegistrationPresenter = new PlayerRegistrationPresenter(playerRegistrationView);
+                _playerRegistrationPresenter.OnPlayerRegistered += HandlePlayerRegistered;
+            }
+
             // Main Menu Presenter
             if (mainMenuView != null)
             {
                 _mainMenuPresenter = new MainMenuPresenter(mainMenuView);
                 _mainMenuPresenter.OnPlayRequested += HandlePlayRequested;
+                _mainMenuPresenter.OnChangePlayerRequested += HandleChangePlayerRequested;
+                _mainMenuPresenter.OnLeaderboardRequested += HandleLeaderboardFromMenuRequested;
+                Debug.Log("[UIManager] MainMenuPresenter initialized with all event handlers");
             }
 
             // Gameplay HUD Presenter
@@ -68,12 +81,17 @@ namespace FlappyBird.UI.Managers
                 _gameplayHUDPresenter = new GameplayHUDPresenter(gameplayHUDView, onScoreChanged);
             }
 
-            // Game Over Presenter
-            if (gameOverView != null)
+            // Leaderboard Presenter
+            if (leaderboardView != null)
             {
-                _gameOverPresenter = new GameOverPresenter(gameOverView);
-                _gameOverPresenter.OnRestartRequested += HandleRestartRequested;
-                _gameOverPresenter.OnMenuRequested += HandleMenuRequested;
+                _leaderboardPresenter = new LeaderboardPresenter(leaderboardView);
+                _leaderboardPresenter.OnReplayRequested += HandleLeaderboardReplayRequested;
+                _leaderboardPresenter.OnExitRequested += HandleLeaderboardExitRequested;
+                Debug.Log("[UIManager] LeaderboardPresenter initialized");
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] LeaderboardView not assigned - leaderboard feature disabled");
             }
 
             // Pause Presenter
@@ -95,13 +113,25 @@ namespace FlappyBird.UI.Managers
         #region UI State Management
 
         /// <summary>
+        /// Show player registration screen
+        /// </summary>
+        public void ShowPlayerRegistration()
+        {
+            _playerRegistrationPresenter?.Show();
+            _mainMenuPresenter?.Hide();
+            _gameplayHUDPresenter?.Hide();
+            _leaderboardPresenter?.Hide();
+        }
+
+        /// <summary>
         /// Show main menu
         /// </summary>
         public void ShowMainMenu()
         {
+            _playerRegistrationPresenter?.Hide();
             _mainMenuPresenter?.Show();
             _gameplayHUDPresenter?.Hide();
-            _gameOverPresenter?.Hide();
+            _leaderboardPresenter?.Hide();
         }
 
         /// <summary>
@@ -109,24 +139,110 @@ namespace FlappyBird.UI.Managers
         /// </summary>
         public void ShowGameplayHUD()
         {
+            _playerRegistrationPresenter?.Hide();
             _mainMenuPresenter?.Hide();
             _gameplayHUDPresenter?.ShowGameplayHUD();
-            _gameOverPresenter?.Hide();
+            _leaderboardPresenter?.Hide();
         }
 
         /// <summary>
-        /// Show game over screen
+        /// Show game over - directly shows leaderboard
         /// </summary>
         public void ShowGameOver(int currentScore, int bestScore, bool isNewBest)
         {
+            Debug.Log($"[UIManager] Game Over! Score: {currentScore}, Best: {bestScore}, NewBest: {isNewBest}");
+            ShowLeaderboard();
+        }
+
+        /// <summary>
+        /// Show leaderboard screen
+        /// </summary>
+        public void ShowLeaderboard()
+        {
+            _playerRegistrationPresenter?.Hide();
             _mainMenuPresenter?.Hide();
             _gameplayHUDPresenter?.Hide();
-            _gameOverPresenter?.ShowGameOver(currentScore, bestScore, isNewBest);
+            _leaderboardPresenter?.Show(10);
+        }
+
+        /// <summary>
+        /// Hide leaderboard
+        /// </summary>
+        public void HideLeaderboard()
+        {
+            _leaderboardPresenter?.Hide();
+        }
+
+        #endregion
+
+        #region Public Fallback Methods (For Inspector Button Assignment)
+
+        /// <summary>
+        /// PUBLIC: Request to change player (can be assigned to button OnClick in Inspector)
+        /// </summary>
+        public void RequestChangePlayer()
+        {
+            Debug.Log("<color=cyan>[UIManager] RequestChangePlayer() called via public method</color>");
+            HandleChangePlayerRequested();
+        }
+
+        /// <summary>
+        /// PUBLIC: Request to show leaderboard (can be assigned to button OnClick in Inspector)
+        /// </summary>
+        public void RequestShowLeaderboard()
+        {
+            Debug.Log("<color=cyan>[UIManager] RequestShowLeaderboard() called via public method</color>");
+            ShowLeaderboard();
+        }
+
+        /// <summary>
+        /// PUBLIC: Request to start game (can be assigned to button OnClick in Inspector)
+        /// </summary>
+        public void RequestPlay()
+        {
+            Debug.Log("<color=cyan>[UIManager] RequestPlay() called via public method</color>");
+            HandlePlayRequested();
+        }
+
+        /// <summary>
+        /// PUBLIC: Request to return to main menu (can be assigned to button OnClick in Inspector)
+        /// </summary>
+        public void RequestMainMenu()
+        {
+            Debug.Log("<color=cyan>[UIManager] RequestMainMenu() called via public method</color>");
+            HandleMenuRequested();
+        }
+
+        /// <summary>
+        /// PUBLIC: Request restart (can be assigned to button OnClick in Inspector)
+        /// </summary>
+        public void RequestRestart()
+        {
+            Debug.Log("<color=cyan>[UIManager] RequestRestart() called via public method</color>");
+            HandleRestartRequested();
         }
 
         #endregion
 
         #region Event Handlers
+
+        private void HandlePlayerRegistered(string playerName)
+        {
+            Debug.Log($"[UIManager] Player '{playerName}' registered - showing main menu");
+            ShowMainMenu();
+        }
+
+        private void HandleChangePlayerRequested()
+        {
+            Debug.Log("[UIManager] Change player requested - showing registration");
+            ShowPlayerRegistration();
+        }
+
+        private void HandleLeaderboardFromMenuRequested()
+        {
+            Debug.Log("[UIManager] Leaderboard requested from main menu");
+            ShowLeaderboard();
+        }
 
         private void HandlePlayRequested()
         {
@@ -146,9 +262,24 @@ namespace FlappyBird.UI.Managers
             Debug.Log("[UIManager] Menu requested - returning to main menu");
             // Ocultar todas las pantallas y mostrar menú principal
             _gameplayHUDPresenter?.Hide();
-            _gameOverPresenter?.Hide();
+            _leaderboardPresenter?.Hide();
             ShowMainMenu();
             // Reiniciar el estado del juego
+            _gameFlowManager?.ReturnToMenu();
+        }
+
+        private void HandleLeaderboardReplayRequested()
+        {
+            Debug.Log("[UIManager] Leaderboard replay requested");
+            _leaderboardPresenter?.Hide();
+            _gameFlowManager?.RestartGame();
+        }
+
+        private void HandleLeaderboardExitRequested()
+        {
+            Debug.Log("[UIManager] Leaderboard exit requested - returning to main menu");
+            _leaderboardPresenter?.Hide();
+            ShowMainMenu();
             _gameFlowManager?.ReturnToMenu();
         }
 
@@ -177,10 +308,30 @@ namespace FlappyBird.UI.Managers
 
         private void OnDestroy()
         {
+            // Unsubscribe from presenter events before disposing
+            if (_mainMenuPresenter != null)
+            {
+                _mainMenuPresenter.OnPlayRequested -= HandlePlayRequested;
+                _mainMenuPresenter.OnChangePlayerRequested -= HandleChangePlayerRequested;
+                _mainMenuPresenter.OnLeaderboardRequested -= HandleLeaderboardFromMenuRequested;
+            }
+
+            if (_playerRegistrationPresenter != null)
+            {
+                _playerRegistrationPresenter.OnPlayerRegistered -= HandlePlayerRegistered;
+            }
+
+            if (_leaderboardPresenter != null)
+            {
+                _leaderboardPresenter.OnReplayRequested -= HandleLeaderboardReplayRequested;
+                _leaderboardPresenter.OnExitRequested -= HandleLeaderboardExitRequested;
+            }
+
             // Cleanup presenters
+            _playerRegistrationPresenter?.Dispose();
             _mainMenuPresenter?.Dispose();
             _gameplayHUDPresenter?.Dispose();
-            _gameOverPresenter?.Dispose();
+            _leaderboardPresenter?.Dispose();
 
             // Unsubscribe from events
             if (onGameStarted != null)

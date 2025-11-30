@@ -32,6 +32,7 @@ namespace FlappyBird.Gameplay.Environment
 
         [Header("Pipe Settings")]
         [SerializeField] private float pipeSpeed = 2f;
+        [SerializeField] private float pipeGap = 2.5f;
 
         private IPoolService _poolService;
         private Coroutine _spawnCoroutine;
@@ -39,8 +40,18 @@ namespace FlappyBird.Gameplay.Environment
 
         private const string PIPE_POOL_NAME = "PipePool";
 
+        // Dynamic difficulty properties
+        private float _currentSpawnInterval;
+        private float _currentPipeSpeed;
+        private float _currentPipeGap;
+
         private void Start()
         {
+            // Initialize dynamic values with defaults
+            _currentSpawnInterval = spawnInterval;
+            _currentPipeSpeed = pipeSpeed;
+            _currentPipeGap = pipeGap;
+
             // Get pool service
             _poolService = ServiceLocator.Get<IPoolService>();
 
@@ -114,7 +125,7 @@ namespace FlappyBird.Gameplay.Environment
             while (_isSpawning)
             {
                 SpawnPipe();
-                yield return new WaitForSeconds(spawnInterval);
+                yield return new WaitForSeconds(_currentSpawnInterval);
             }
         }
 
@@ -126,25 +137,52 @@ namespace FlappyBird.Gameplay.Environment
             float randomY = Random.Range(minY, maxY);
             Vector3 spawnPosition = new Vector3(spawnX, randomY, 0f);
 
-            // Get pipe from pool
+            // Get pipe from pool - position is set here initially
             GameObject pipe = _poolService.Get(PIPE_POOL_NAME, spawnPosition, Quaternion.identity);
 
             if (pipe != null)
             {
-                // Activate pipe behavior
+                // Activate pipe behavior with current difficulty settings
+                // Using the dynamic values (_currentPipeSpeed, _currentPipeGap) instead of serialized defaults
                 Pipe pipeComponent = pipe.GetComponent<Pipe>();
                 if (pipeComponent != null)
                 {
-                    pipeComponent.Activate(spawnPosition, pipeSpeed);
+                    // Pass current dynamic gap and speed to avoid visual repositioning
+                    pipeComponent.Activate(spawnPosition, _currentPipeSpeed, _currentPipeGap);
                 }
-
-                // Reset score zone
-                ScoreZone scoreZone = pipe.GetComponentInChildren<ScoreZone>();
-                if (scoreZone != null)
+                else
                 {
-                    scoreZone.ResetScore();
+                    Debug.LogWarning("[PipeSpawner] Pipe component not found on spawned object!");
                 }
             }
+        }
+
+        /// <summary>
+        /// Set spawn rate dynamically (for difficulty)
+        /// </summary>
+        public void SetSpawnRate(float rate)
+        {
+            _currentSpawnInterval = rate;
+            Debug.Log($"[PipeSpawner] Spawn rate set to: {rate}s");
+        }
+
+        /// <summary>
+        /// Set pipe gap dynamically (for difficulty)
+        /// </summary>
+        public void SetPipeGap(float gap)
+        {
+            _currentPipeGap = gap;
+            Debug.Log($"[PipeSpawner] Pipe gap set to: {gap}");
+        }
+
+        /// <summary>
+        /// Set pipe speed dynamically (for difficulty)
+        /// </summary>
+        public void SetPipeSpeed(float speed)
+        {
+            _currentPipeSpeed = speed;
+            pipeSpeed = speed; // Update serialized field too
+            Debug.Log($"[PipeSpawner] Pipe speed set to: {speed}");
         }
 
         private void OnDrawGizmosSelected()
