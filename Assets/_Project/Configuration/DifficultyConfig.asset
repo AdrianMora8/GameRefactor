@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d31bfafbc45990949a7c49a9e53e1e6b, type: 3}
   m_Name: DifficultyConfig
   m_EditorClassIdentifier: 
-  easyPipeSpeed: 3
-  easyPipeGap: 2.5
-  easySpawnRate: 2
-  mediumPipeSpeed: 4
-  mediumPipeGap: 2.2
-  mediumSpawnRate: 1.5
-  hardPipeSpeed: 5
-  hardPipeGap: 2
-  hardSpawnRate: 1.2
+  level1PipeSpeed: 4
+  level1PipeGap: 0.1
+  level1SpawnRate: 0.5
+  level2PipeSpeed: 5
+  level2PipeGap: 1
+  level2SpawnRate: 1
+  level3PipeSpeed: 6
+  level3PipeGap: 1.7
+  level3SpawnRate: 0.5
+  level4PipeSpeed: 2
+  level4PipeGap: 1.5
+  level4SpawnRate: 1.5

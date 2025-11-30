@@ -9,31 +9,32 @@ namespace FlappyBird.Configuration
     /// ============================================
     /// ScriptableObject for difficulty progression
     /// 
-    /// SOLID: Open/Closed Principle
-    /// - Open for extension (add new levels)
-    /// - Closed for modification (no code changes needed)
-    /// 
-    /// PATTERN: Strategy Pattern
-    /// - Different difficulty configurations
+    /// Cycle: Level 1 → 2 → 3 → 4 → 1 → 2 → 3 → 4 → ...
+    /// Each level lasts 10 points
     /// ============================================
     /// </summary>
     [CreateAssetMenu(fileName = "DifficultyConfig", menuName = "Flappy Bird/Configuration/Difficulty Config")]
     public class DifficultyConfig : ScriptableObject
     {
-        [Header("Easy Difficulty (0-9 points)")]
-        [SerializeField] private float easyPipeSpeed = 3f;
-        [SerializeField] private float easyPipeGap = 2.5f;
-        [SerializeField] private float easySpawnRate = 2f;
+        [Header("Level 1 - Easy (0-9, 40-49, 80-89...)")]
+        [SerializeField] private float level1PipeSpeed = 2f;
+        [SerializeField] private float level1PipeGap = 2.0f;
+        [SerializeField] private float level1SpawnRate = 2.0f;
 
-        [Header("Medium Difficulty (10-19 points)")]
-        [SerializeField] private float mediumPipeSpeed = 4f;
-        [SerializeField] private float mediumPipeGap = 2.2f;
-        [SerializeField] private float mediumSpawnRate = 1.5f;
+        [Header("Level 2 - Normal (10-19, 50-59, 90-99...)")]
+        [SerializeField] private float level2PipeSpeed = 2f;
+        [SerializeField] private float level2PipeGap = 2.0f;
+        [SerializeField] private float level2SpawnRate = 1.7f;
 
-        [Header("Hard Difficulty (20+ points)")]
-        [SerializeField] private float hardPipeSpeed = 5f;
-        [SerializeField] private float hardPipeGap = 2.0f;
-        [SerializeField] private float hardSpawnRate = 1.2f;
+        [Header("Level 3 - Hard (20-29, 60-69, 100-109...)")]
+        [SerializeField] private float level3PipeSpeed = 2f;
+        [SerializeField] private float level3PipeGap = 1.7f;
+        [SerializeField] private float level3SpawnRate = 1.7f;
+
+        [Header("Level 4 - Very Hard (30-39, 70-79, 110-119...)")]
+        [SerializeField] private float level4PipeSpeed = 2f;
+        [SerializeField] private float level4PipeGap = 1.5f;
+        [SerializeField] private float level4SpawnRate = 1.5f;
 
         private DifficultyLevel[] _difficultyLevels;
 
@@ -46,14 +47,15 @@ namespace FlappyBird.Configuration
         {
             _difficultyLevels = new DifficultyLevel[]
             {
-                new DifficultyLevel("Easy", 0, 9, easyPipeSpeed, easyPipeGap, easySpawnRate),
-                new DifficultyLevel("Medium", 10, 19, mediumPipeSpeed, mediumPipeGap, mediumSpawnRate),
-                new DifficultyLevel("Hard", 20, -1, hardPipeSpeed, hardPipeGap, hardSpawnRate) // -1 = no max
+                new DifficultyLevel("Level 1", 0, 9, level1PipeSpeed, level1PipeGap, level1SpawnRate),
+                new DifficultyLevel("Level 2", 10, 19, level2PipeSpeed, level2PipeGap, level2SpawnRate),
+                new DifficultyLevel("Level 3", 20, 29, level3PipeSpeed, level3PipeGap, level3SpawnRate),
+                new DifficultyLevel("Level 4", 30, 39, level4PipeSpeed, level4PipeGap, level4SpawnRate)
             };
         }
 
         /// <summary>
-        /// Get difficulty level for a given score
+        /// Get difficulty level for a given score (cycles every 40 points)
         /// </summary>
         public DifficultyLevel GetDifficultyForScore(int score)
         {
@@ -62,16 +64,20 @@ namespace FlappyBird.Configuration
                 InitializeLevels();
             }
 
-            foreach (var level in _difficultyLevels)
-            {
-                if (level.AppliesTo(score))
-                {
-                    return level;
-                }
-            }
+            // Calculate which level in the cycle (0-3)
+            // Score 0-9 = Level 0, Score 10-19 = Level 1, etc.
+            // After 40, it cycles: Score 40-49 = Level 0 again
+            int cyclePosition = (score / 10) % 4;
+            
+            return _difficultyLevels[cyclePosition];
+        }
 
-            // Fallback to hardest
-            return _difficultyLevels[_difficultyLevels.Length - 1];
+        /// <summary>
+        /// Get current difficulty level number (1-4) for a given score
+        /// </summary>
+        public int GetDifficultyLevelNumber(int score)
+        {
+            return ((score / 10) % 4) + 1;
         }
 
         /// <summary>
