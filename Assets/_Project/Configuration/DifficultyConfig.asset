@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: DifficultyConfig
   m_EditorClassIdentifier: 
   level1PipeSpeed: 4
-  level1PipeGap: 0.1
-  level1SpawnRate: 0.5
-  level2PipeSpeed: 5
-  level2PipeGap: 1
-  level2SpawnRate: 1
-  level3PipeSpeed: 6
-  level3PipeGap: 1.7
+  level1PipeGap: 5
+  level1SpawnRate: 1
+  level2PipeSpeed: 6
+  level2PipeGap: 4
+  level2SpawnRate: 0.7
+  level3PipeSpeed: 5
+  level3PipeGap: 5
   level3SpawnRate: 0.5
-  level4PipeSpeed: 2
-  level4PipeGap: 1.5
-  level4SpawnRate: 1.5
+  level4PipeSpeed: 4
+  level4PipeGap: 4
+  level4SpawnRate: 0.5

@@ -32,7 +32,7 @@ namespace FlappyBird.Gameplay.Environment
 
         [Header("Pipe Settings")]
         [SerializeField] private float pipeSpeed = 2f;
-        [SerializeField] private float pipeGap = 2.5f;
+        [SerializeField] private float pipeGap = 5.0f;
 
         private IPoolService _poolService;
         private Coroutine _spawnCoroutine;

@@ -18,22 +18,22 @@ namespace FlappyBird.Configuration
     {
         [Header("Level 1 - Easy (0-9, 40-49, 80-89...)")]
         [SerializeField] private float level1PipeSpeed = 2f;
-        [SerializeField] private float level1PipeGap = 2.0f;
+        [SerializeField] private float level1PipeGap = 5.0f;
         [SerializeField] private float level1SpawnRate = 2.0f;
 
         [Header("Level 2 - Normal (10-19, 50-59, 90-99...)")]
         [SerializeField] private float level2PipeSpeed = 2f;
-        [SerializeField] private float level2PipeGap = 2.0f;
+        [SerializeField] private float level2PipeGap = 5.0f;
         [SerializeField] private float level2SpawnRate = 1.7f;
 
         [Header("Level 3 - Hard (20-29, 60-69, 100-109...)")]
         [SerializeField] private float level3PipeSpeed = 2f;
-        [SerializeField] private float level3PipeGap = 1.7f;
+        [SerializeField] private float level3PipeGap = 4.5f;
         [SerializeField] private float level3SpawnRate = 1.7f;
 
         [Header("Level 4 - Very Hard (30-39, 70-79, 110-119...)")]
         [SerializeField] private float level4PipeSpeed = 2f;
-        [SerializeField] private float level4PipeGap = 1.5f;
+        [SerializeField] private float level4PipeGap = 4.0f;
         [SerializeField] private float level4SpawnRate = 1.5f;
 
         private DifficultyLevel[] _difficultyLevels;

@@ -74,7 +74,7 @@ namespace FlappyBird.UI.Presenters
                 Debug.LogWarning("[LeaderboardPresenter] PlayerService is null, showing empty leaderboard");
             }
 
-            _view.SetTitle("🏆 TOP 10 PLAYERS 🏆");
+            _view.SetTitle("TOP 10");
             _view.Show(players);
         }
 

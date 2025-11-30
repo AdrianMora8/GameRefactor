@@ -34,8 +34,8 @@ namespace FlappyBird.Gameplay.Environment
         [SerializeField] private Transform bottomPipe;
 
         [Header("Default Gap Settings")]
-        [Tooltip("This should match the original gap in the prefab")]
-        [SerializeField] private float defaultGap = 2.5f;
+        [Tooltip("This should match the original visual gap in the prefab (distance between pipe edges)")]
+        [SerializeField] private float defaultGap = 5.0f;
 
         private bool _isActive = false;
         private float _currentGap;
@@ -112,10 +112,8 @@ namespace FlappyBird.Gameplay.Environment
             moveSpeed = speed;
             _currentGap = gap;
 
-            // IMPORTANT: Do NOT adjust pipe children positions
-            // The prefab is already configured with correct gap
-            // Only reset to original prefab positions
-            ResetToOriginalPositions();
+            // Adjust pipe children positions based on desired gap
+            AdjustGap(gap);
 
             // Now activate
             _isActive = true;
@@ -137,14 +135,30 @@ namespace FlappyBird.Gameplay.Environment
         }
 
         /// <summary>
-        /// Adjust the gap between top and bottom pipes
-        /// NOTE: Currently disabled - using original prefab positions
+        /// Adjust the gap between top and bottom pipes visually
+        /// Moves pipes relative to their original positions
         /// </summary>
-        private void AdjustGap(float gap)
+        private void AdjustGap(float desiredGap)
         {
-            // Disabled - prefab is already configured with correct gap
-            // If you need dynamic gap adjustment, the sprites need proper pivot points
-            return;
+            if (topPipe == null || bottomPipe == null)
+            {
+                return;
+            }
+
+            // Calculate how much to adjust from the original gap
+            // Positive = increase gap, Negative = decrease gap
+            float gapDifference = desiredGap - _originalGapDistance;
+            float halfDifference = gapDifference / 2f;
+
+            // Move top pipe up and bottom pipe down (relative to original positions)
+            // If gapDifference is negative (smaller gap), top moves down, bottom moves up
+            Vector3 topPos = _topPipeInitialLocalPos;
+            topPos.y += halfDifference;
+            topPipe.localPosition = topPos;
+
+            Vector3 bottomPos = _bottomPipeInitialLocalPos;
+            bottomPos.y -= halfDifference;
+            bottomPipe.localPosition = bottomPos;
         }
 
         /// <summary>

@@ -516,31 +516,5 @@ namespace FlappyBird.Gameplay.Managers
                 _stateMachine.OnStateChanged -= OnStateChanged;
             }
         }
-
-        #region Debug
-
-        [Header("Debug")]
-        [SerializeField] private bool showDebugUI = true;
-
-        private void OnGUI()
-        {
-            if (!_isInitialized || !showDebugUI || _stateMachine == null) return;
-
-            GUILayout.BeginArea(new Rect(10, 10, 300, 200));
-            GUILayout.Label($"State: {_stateMachine.CurrentStateType}");
-            GUILayout.Label($"Score: {GetCurrentScore()}");
-            GUILayout.Label($"Best: {GetBestScore()}");
-            
-            if (GUILayout.Button("Force Start"))
-                StartGame();
-            if (GUILayout.Button("Force Game Over"))
-                EndGame();
-            if (GUILayout.Button("Force Restart"))
-                RestartGame();
-            
-            GUILayout.EndArea();
-        }
-
-        #endregion
     }
 }
