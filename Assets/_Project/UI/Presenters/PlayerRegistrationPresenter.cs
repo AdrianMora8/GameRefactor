@@ -31,11 +31,11 @@ namespace FlappyBird.UI.Presenters
             // Get PlayerService
             _playerService = ServiceLocator.Get<PlayerService>();
 
-            // Setup play button listener (handles both register and login)
-            var playButton = _view.GetPlayButton();
-            if (playButton != null)
+            // Setup start button listener (handles both register and login)
+            var startButton = _view.GetStartButton();
+            if (startButton != null)
             {
-                playButton.onClick.AddListener(HandlePlayButton);
+                startButton.onClick.AddListener(HandleStartButton);
             }
 
             // Setup input field listener (Enter key)
@@ -62,7 +62,7 @@ namespace FlappyBird.UI.Presenters
             _view.Hide();
         }
 
-        private void HandlePlayButton()
+        private void HandleStartButton()
         {
             AuthenticatePlayer();
         }
@@ -157,10 +157,10 @@ namespace FlappyBird.UI.Presenters
         /// </summary>
         public void Dispose()
         {
-            var playButton = _view.GetPlayButton();
-            if (playButton != null)
+            var startButton = _view.GetStartButton();
+            if (startButton != null)
             {
-                playButton.onClick.RemoveListener(HandlePlayButton);
+                startButton.onClick.RemoveListener(HandleStartButton);
             }
 
             var passwordField = _view.GetPasswordInputField();

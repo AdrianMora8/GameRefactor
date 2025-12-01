@@ -37,11 +37,9 @@ namespace FlappyBird.Core.UseCases
             
             if (player == null)
             {
-                // Player doesn't exist, create new one with this score
-                player = new Player(playerName);
-                player.UpdateScore(newScore);
-                _playerRepository.SavePlayer(player);
-                return true; // First score is always a record
+                // Player doesn't exist - this shouldn't happen normally
+                // but we handle it gracefully by not updating
+                return false;
             }
 
             // Update score

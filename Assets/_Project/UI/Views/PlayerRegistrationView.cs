@@ -19,7 +19,7 @@ namespace FlappyBird.UI.Views
         [Header("UI Elements")]
         [SerializeField] private TMP_InputField nameInputField;
         [SerializeField] private TMP_InputField passwordInputField;
-        [SerializeField] private Button playButton;
+        [SerializeField] private Button startButton;
         [SerializeField] private TextMeshProUGUI errorText;
 
         /// <summary>
@@ -33,9 +33,9 @@ namespace FlappyBird.UI.Views
         public TMP_InputField GetPasswordInputField() => passwordInputField;
 
         /// <summary>
-        /// Get play button (used for both register and login)
+        /// Get start button (used for both register and login)
         /// </summary>
-        public Button GetPlayButton() => playButton;
+        public Button GetStartButton() => startButton;
 
         /// <summary>
         /// Get current input name
