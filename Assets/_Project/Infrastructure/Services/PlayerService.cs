@@ -44,11 +44,20 @@ namespace FlappyBird.Infrastructure.Services
         }
 
         /// <summary>
-        /// Register or switch to a player
+        /// Register a new player with password
         /// </summary>
-        public Player RegisterPlayer(string playerName)
+        public Player RegisterPlayer(string playerName, string password)
         {
-            _currentPlayer = _registerPlayerUseCase.Execute(playerName);
+            _currentPlayer = _registerPlayerUseCase.Execute(playerName, password);
+            return _currentPlayer;
+        }
+
+        /// <summary>
+        /// Login an existing player with password
+        /// </summary>
+        public Player LoginPlayer(string playerName, string password)
+        {
+            _currentPlayer = _registerPlayerUseCase.Login(playerName, password);
             return _currentPlayer;
         }
 

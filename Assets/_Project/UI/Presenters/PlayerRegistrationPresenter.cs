@@ -31,18 +31,25 @@ namespace FlappyBird.UI.Presenters
             // Get PlayerService
             _playerService = ServiceLocator.Get<PlayerService>();
 
-            // Setup button listener
-            var startButton = _view.GetStartButton();
-            if (startButton != null)
+            // Setup register button listener
+            var registerButton = _view.GetRegisterButton();
+            if (registerButton != null)
             {
-                startButton.onClick.AddListener(HandleStartButton);
+                registerButton.onClick.AddListener(HandleRegisterButton);
             }
 
-            // Setup input field listener (Enter key)
-            var inputField = _view.GetNameInputField();
-            if (inputField != null)
+            // Setup login button listener
+            var loginButton = _view.GetLoginButton();
+            if (loginButton != null)
             {
-                inputField.onSubmit.AddListener(OnInputSubmit);
+                loginButton.onClick.AddListener(HandleLoginButton);
+            }
+
+            // Setup input field listener (Enter key for login)
+            var passwordField = _view.GetPasswordInputField();
+            if (passwordField != null)
+            {
+                passwordField.onSubmit.AddListener(OnPasswordSubmit);
             }
         }
 
@@ -62,43 +69,72 @@ namespace FlappyBird.UI.Presenters
             _view.Hide();
         }
 
-        private void HandleStartButton()
+        private void HandleRegisterButton()
         {
             RegisterPlayer();
         }
 
-        private void OnInputSubmit(string input)
+        private void HandleLoginButton()
         {
-            RegisterPlayer();
+            LoginPlayer();
         }
 
-        private void RegisterPlayer()
+        private void OnPasswordSubmit(string input)
         {
-            string playerName = _view.GetPlayerName().Trim();
+            LoginPlayer();
+        }
 
-            // Validate
+        private bool ValidateInput(out string playerName, out string password)
+        {
+            playerName = _view.GetPlayerName().Trim();
+            password = _view.GetPassword();
+
+            // Validate name
             if (string.IsNullOrWhiteSpace(playerName))
             {
                 _view.ShowError("Please enter your name!");
-                return;
+                return false;
             }
 
             if (playerName.Length < 2)
             {
                 _view.ShowError("Name must be at least 2 characters!");
-                return;
+                return false;
             }
 
             if (playerName.Length > 15)
             {
                 _view.ShowError("Name must be less than 15 characters!");
+                return false;
+            }
+
+            // Validate password
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                _view.ShowError("Please enter a password!");
+                return false;
+            }
+
+            if (password.Length < 3)
+            {
+                _view.ShowError("Password must be at least 3 characters!");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void RegisterPlayer()
+        {
+            if (!ValidateInput(out string playerName, out string password))
+            {
                 return;
             }
 
-            // Register player
+            // Register new player
             try
             {
-                _playerService.RegisterPlayer(playerName);
+                _playerService.RegisterPlayer(playerName, password);
 
                 _view.HideError();
                 _view.ClearInput();
@@ -108,7 +144,35 @@ namespace FlappyBird.UI.Presenters
             }
             catch (Exception e)
             {
-                _view.ShowError($"Error: {e.Message}");
+                _view.ShowError(e.Message);
+            }
+        }
+
+        private void LoginPlayer()
+        {
+            if (!ValidateInput(out string playerName, out string password))
+            {
+                return;
+            }
+
+            // Login existing player
+            try
+            {
+                _playerService.LoginPlayer(playerName, password);
+
+                _view.HideError();
+                _view.ClearInput();
+
+                // Notify
+                OnPlayerRegistered?.Invoke(playerName);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                _view.ShowError("Incorrect password!");
+            }
+            catch (Exception e)
+            {
+                _view.ShowError(e.Message);
             }
         }
 
@@ -117,16 +181,22 @@ namespace FlappyBird.UI.Presenters
         /// </summary>
         public void Dispose()
         {
-            var startButton = _view.GetStartButton();
-            if (startButton != null)
+            var registerButton = _view.GetRegisterButton();
+            if (registerButton != null)
             {
-                startButton.onClick.RemoveListener(HandleStartButton);
+                registerButton.onClick.RemoveListener(HandleRegisterButton);
             }
 
-            var inputField = _view.GetNameInputField();
-            if (inputField != null)
+            var loginButton = _view.GetLoginButton();
+            if (loginButton != null)
             {
-                inputField.onSubmit.RemoveListener(OnInputSubmit);
+                loginButton.onClick.RemoveListener(HandleLoginButton);
+            }
+
+            var passwordField = _view.GetPasswordInputField();
+            if (passwordField != null)
+            {
+                passwordField.onSubmit.RemoveListener(OnPasswordSubmit);
             }
         }
     }

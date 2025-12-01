@@ -19,15 +19,17 @@ namespace FlappyBird.Core.Entities
     public class Player
     {
         public string Name { get; private set; }
+        public string Password { get; private set; }
         public int BestScore { get; private set; }
         public DateTime LastPlayedDate { get; private set; }
 
         /// <summary>
-        /// Constructor for new player
+        /// Constructor for new player with password
         /// </summary>
-        public Player(string name)
+        public Player(string name, string password)
         {
             Name = name;
+            Password = password;
             BestScore = 0;
             LastPlayedDate = DateTime.Now;
         }
@@ -35,11 +37,20 @@ namespace FlappyBird.Core.Entities
         /// <summary>
         /// Constructor for loading existing player
         /// </summary>
-        public Player(string name, int bestScore, DateTime lastPlayedDate)
+        public Player(string name, string password, int bestScore, DateTime lastPlayedDate)
         {
             Name = name;
+            Password = password;
             BestScore = bestScore;
             LastPlayedDate = lastPlayedDate;
+        }
+
+        /// <summary>
+        /// Verify password for authentication
+        /// </summary>
+        public bool VerifyPassword(string inputPassword)
+        {
+            return Password == inputPassword;
         }
 
         /// <summary>

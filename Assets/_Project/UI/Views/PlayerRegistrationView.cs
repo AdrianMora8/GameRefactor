@@ -18,7 +18,9 @@ namespace FlappyBird.UI.Views
     {
         [Header("UI Elements")]
         [SerializeField] private TMP_InputField nameInputField;
-        [SerializeField] private Button startButton;
+        [SerializeField] private TMP_InputField passwordInputField;
+        [SerializeField] private Button registerButton;
+        [SerializeField] private Button loginButton;
         [SerializeField] private TextMeshProUGUI errorText;
 
         /// <summary>
@@ -27,9 +29,19 @@ namespace FlappyBird.UI.Views
         public TMP_InputField GetNameInputField() => nameInputField;
 
         /// <summary>
-        /// Get start button
+        /// Get password input field
         /// </summary>
-        public Button GetStartButton() => startButton;
+        public TMP_InputField GetPasswordInputField() => passwordInputField;
+
+        /// <summary>
+        /// Get register button
+        /// </summary>
+        public Button GetRegisterButton() => registerButton;
+
+        /// <summary>
+        /// Get login button
+        /// </summary>
+        public Button GetLoginButton() => loginButton;
 
         /// <summary>
         /// Get current input name
@@ -37,6 +49,14 @@ namespace FlappyBird.UI.Views
         public string GetPlayerName()
         {
             return nameInputField != null ? nameInputField.text : string.Empty;
+        }
+
+        /// <summary>
+        /// Get current input password
+        /// </summary>
+        public string GetPassword()
+        {
+            return passwordInputField != null ? passwordInputField.text : string.Empty;
         }
 
         /// <summary>
@@ -70,6 +90,10 @@ namespace FlappyBird.UI.Views
             if (nameInputField != null)
             {
                 nameInputField.text = string.Empty;
+            }
+            if (passwordInputField != null)
+            {
+                passwordInputField.text = string.Empty;
             }
         }
 

@@ -94,6 +94,7 @@ namespace FlappyBird.Infrastructure.Data
                     {
                         var player = new Player(
                             data.name,
+                            data.password ?? "",
                             data.bestScore,
                             DateTime.Parse(data.lastPlayedDate)
                         );
@@ -116,6 +117,7 @@ namespace FlappyBird.Infrastructure.Data
                     players = _players.Values.Select(p => new PlayerData
                     {
                         name = p.Name,
+                        password = p.Password,
                         bestScore = p.BestScore,
                         lastPlayedDate = p.LastPlayedDate.ToString("o") // ISO 8601 format
                     }).ToList()
@@ -142,6 +144,7 @@ namespace FlappyBird.Infrastructure.Data
         private class PlayerData
         {
             public string name;
+            public string password;
             public int bestScore;
             public string lastPlayedDate;
         }
