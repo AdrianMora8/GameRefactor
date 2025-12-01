@@ -62,6 +62,14 @@ namespace FlappyBird.Infrastructure.Services
         }
 
         /// <summary>
+        /// Check if a player exists
+        /// </summary>
+        public bool PlayerExists(string playerName)
+        {
+            return _repository.PlayerExists(playerName);
+        }
+
+        /// <summary>
         /// Update current player's score
         /// </summary>
         public bool UpdateCurrentPlayerScore(int newScore)

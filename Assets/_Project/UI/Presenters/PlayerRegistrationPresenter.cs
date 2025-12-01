@@ -31,21 +31,14 @@ namespace FlappyBird.UI.Presenters
             // Get PlayerService
             _playerService = ServiceLocator.Get<PlayerService>();
 
-            // Setup register button listener
-            var registerButton = _view.GetRegisterButton();
-            if (registerButton != null)
+            // Setup play button listener (handles both register and login)
+            var playButton = _view.GetPlayButton();
+            if (playButton != null)
             {
-                registerButton.onClick.AddListener(HandleRegisterButton);
+                playButton.onClick.AddListener(HandlePlayButton);
             }
 
-            // Setup login button listener
-            var loginButton = _view.GetLoginButton();
-            if (loginButton != null)
-            {
-                loginButton.onClick.AddListener(HandleLoginButton);
-            }
-
-            // Setup input field listener (Enter key for login)
+            // Setup input field listener (Enter key)
             var passwordField = _view.GetPasswordInputField();
             if (passwordField != null)
             {
@@ -69,19 +62,14 @@ namespace FlappyBird.UI.Presenters
             _view.Hide();
         }
 
-        private void HandleRegisterButton()
+        private void HandlePlayButton()
         {
-            RegisterPlayer();
-        }
-
-        private void HandleLoginButton()
-        {
-            LoginPlayer();
+            AuthenticatePlayer();
         }
 
         private void OnPasswordSubmit(string input)
         {
-            LoginPlayer();
+            AuthenticatePlayer();
         }
 
         private bool ValidateInput(out string playerName, out string password)
@@ -124,41 +112,29 @@ namespace FlappyBird.UI.Presenters
             return true;
         }
 
-        private void RegisterPlayer()
+        /// <summary>
+        /// Auto-detect: if player exists -> login, if not -> register
+        /// </summary>
+        private void AuthenticatePlayer()
         {
             if (!ValidateInput(out string playerName, out string password))
             {
                 return;
             }
 
-            // Register new player
             try
             {
-                _playerService.RegisterPlayer(playerName, password);
-
-                _view.HideError();
-                _view.ClearInput();
-
-                // Notify
-                OnPlayerRegistered?.Invoke(playerName);
-            }
-            catch (Exception e)
-            {
-                _view.ShowError(e.Message);
-            }
-        }
-
-        private void LoginPlayer()
-        {
-            if (!ValidateInput(out string playerName, out string password))
-            {
-                return;
-            }
-
-            // Login existing player
-            try
-            {
-                _playerService.LoginPlayer(playerName, password);
+                // Check if player exists
+                if (_playerService.PlayerExists(playerName))
+                {
+                    // Player exists -> Login
+                    _playerService.LoginPlayer(playerName, password);
+                }
+                else
+                {
+                    // New player -> Register
+                    _playerService.RegisterPlayer(playerName, password);
+                }
 
                 _view.HideError();
                 _view.ClearInput();
@@ -181,16 +157,10 @@ namespace FlappyBird.UI.Presenters
         /// </summary>
         public void Dispose()
         {
-            var registerButton = _view.GetRegisterButton();
-            if (registerButton != null)
+            var playButton = _view.GetPlayButton();
+            if (playButton != null)
             {
-                registerButton.onClick.RemoveListener(HandleRegisterButton);
-            }
-
-            var loginButton = _view.GetLoginButton();
-            if (loginButton != null)
-            {
-                loginButton.onClick.RemoveListener(HandleLoginButton);
+                playButton.onClick.RemoveListener(HandlePlayButton);
             }
 
             var passwordField = _view.GetPasswordInputField();
