@@ -24,6 +24,7 @@ namespace FlappyBird.Infrastructure.Services
         private readonly RegisterPlayerUseCase _registerPlayerUseCase;
         private readonly UpdatePlayerScoreUseCase _updateScoreUseCase;
         private readonly GetLeaderboardUseCase _getLeaderboardUseCase;
+        private readonly ResetPasswordUseCase _resetPasswordUseCase;
 
         private Player _currentPlayer;
 
@@ -33,6 +34,7 @@ namespace FlappyBird.Infrastructure.Services
             _registerPlayerUseCase = new RegisterPlayerUseCase(_repository);
             _updateScoreUseCase = new UpdatePlayerScoreUseCase(_repository);
             _getLeaderboardUseCase = new GetLeaderboardUseCase(_repository);
+            _resetPasswordUseCase = new ResetPasswordUseCase(_repository);
         }
 
         /// <summary>
@@ -67,6 +69,14 @@ namespace FlappyBird.Infrastructure.Services
         public bool PlayerExists(string playerName)
         {
             return _repository.PlayerExists(playerName);
+        }
+
+        /// <summary>
+        /// Reset player's password (must be different from current)
+        /// </summary>
+        public void ResetPassword(string playerName, string newPassword)
+        {
+            _resetPasswordUseCase.Execute(playerName, newPassword);
         }
 
         /// <summary>

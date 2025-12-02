@@ -21,6 +21,7 @@ namespace FlappyBird.UI.Managers
     {
         [Header("Views")]
         [SerializeField] private PlayerRegistrationView playerRegistrationView;
+        [SerializeField] private PasswordRecoveryView passwordRecoveryView;
         [SerializeField] private MainMenuView mainMenuView;
         [SerializeField] private GameplayHUDView gameplayHUDView;
         [SerializeField] private LeaderboardView leaderboardView;
@@ -34,6 +35,7 @@ namespace FlappyBird.UI.Managers
 
         // Presenters
         private PlayerRegistrationPresenter _playerRegistrationPresenter;
+        private PasswordRecoveryPresenter _passwordRecoveryPresenter;
         private MainMenuPresenter _mainMenuPresenter;
         private GameplayHUDPresenter _gameplayHUDPresenter;
         private LeaderboardPresenter _leaderboardPresenter;
@@ -63,6 +65,15 @@ namespace FlappyBird.UI.Managers
             {
                 _playerRegistrationPresenter = new PlayerRegistrationPresenter(playerRegistrationView);
                 _playerRegistrationPresenter.OnPlayerRegistered += HandlePlayerRegistered;
+                _playerRegistrationPresenter.OnForgotPasswordClicked += HandleForgotPasswordClicked;
+            }
+
+            // Password Recovery Presenter
+            if (passwordRecoveryView != null)
+            {
+                _passwordRecoveryPresenter = new PasswordRecoveryPresenter(passwordRecoveryView);
+                _passwordRecoveryPresenter.OnPasswordReset += HandlePasswordReset;
+                _passwordRecoveryPresenter.OnCancelled += HandlePasswordRecoveryCancelled;
             }
 
             // Main Menu Presenter
@@ -112,6 +123,7 @@ namespace FlappyBird.UI.Managers
         public void ShowPlayerRegistration()
         {
             _playerRegistrationPresenter?.Show();
+            _passwordRecoveryPresenter?.Hide();
             _mainMenuPresenter?.Hide();
             _gameplayHUDPresenter?.Hide();
             _leaderboardPresenter?.Hide();
@@ -123,6 +135,7 @@ namespace FlappyBird.UI.Managers
         public void ShowMainMenu()
         {
             _playerRegistrationPresenter?.Hide();
+            _passwordRecoveryPresenter?.Hide();
             _mainMenuPresenter?.Show();
             _gameplayHUDPresenter?.Hide();
             _leaderboardPresenter?.Hide();
@@ -219,6 +232,26 @@ namespace FlappyBird.UI.Managers
             ShowMainMenu();
         }
 
+        private void HandleForgotPasswordClicked()
+        {
+            _playerRegistrationPresenter?.Hide();
+            _passwordRecoveryPresenter?.Show();
+        }
+
+        private void HandlePasswordReset()
+        {
+            // Password was reset successfully, go back to registration
+            _passwordRecoveryPresenter?.Hide();
+            _playerRegistrationPresenter?.Show();
+        }
+
+        private void HandlePasswordRecoveryCancelled()
+        {
+            // User cancelled, go back to registration
+            _passwordRecoveryPresenter?.Hide();
+            _playerRegistrationPresenter?.Show();
+        }
+
         private void HandleChangePlayerRequested()
         {
             ShowPlayerRegistration();
@@ -296,6 +329,13 @@ namespace FlappyBird.UI.Managers
             if (_playerRegistrationPresenter != null)
             {
                 _playerRegistrationPresenter.OnPlayerRegistered -= HandlePlayerRegistered;
+                _playerRegistrationPresenter.OnForgotPasswordClicked -= HandleForgotPasswordClicked;
+            }
+
+            if (_passwordRecoveryPresenter != null)
+            {
+                _passwordRecoveryPresenter.OnPasswordReset -= HandlePasswordReset;
+                _passwordRecoveryPresenter.OnCancelled -= HandlePasswordRecoveryCancelled;
             }
 
             if (_leaderboardPresenter != null)
@@ -306,6 +346,7 @@ namespace FlappyBird.UI.Managers
 
             // Cleanup presenters
             _playerRegistrationPresenter?.Dispose();
+            _passwordRecoveryPresenter?.Dispose();
             _mainMenuPresenter?.Dispose();
             _gameplayHUDPresenter?.Dispose();
             _leaderboardPresenter?.Dispose();

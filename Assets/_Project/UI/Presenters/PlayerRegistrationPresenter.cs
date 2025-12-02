@@ -23,6 +23,7 @@ namespace FlappyBird.UI.Presenters
         private PlayerService _playerService;
 
         public event Action<string> OnPlayerRegistered;
+        public event Action OnForgotPasswordClicked;
 
         public PlayerRegistrationPresenter(PlayerRegistrationView view)
         {
@@ -36,6 +37,13 @@ namespace FlappyBird.UI.Presenters
             if (startButton != null)
             {
                 startButton.onClick.AddListener(HandleStartButton);
+            }
+
+            // Setup forgot password button listener
+            var forgotButton = _view.GetForgotPasswordButton();
+            if (forgotButton != null)
+            {
+                forgotButton.onClick.AddListener(HandleForgotPasswordButton);
             }
 
             // Setup input field listener (Enter key)
@@ -65,6 +73,12 @@ namespace FlappyBird.UI.Presenters
         private void HandleStartButton()
         {
             AuthenticatePlayer();
+        }
+
+        private void HandleForgotPasswordButton()
+        {
+            _view.HideError();
+            OnForgotPasswordClicked?.Invoke();
         }
 
         private void OnPasswordSubmit(string input)
@@ -161,6 +175,12 @@ namespace FlappyBird.UI.Presenters
             if (startButton != null)
             {
                 startButton.onClick.RemoveListener(HandleStartButton);
+            }
+
+            var forgotButton = _view.GetForgotPasswordButton();
+            if (forgotButton != null)
+            {
+                forgotButton.onClick.RemoveListener(HandleForgotPasswordButton);
             }
 
             var passwordField = _view.GetPasswordInputField();
